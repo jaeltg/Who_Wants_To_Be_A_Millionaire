@@ -2,6 +2,7 @@
   <div id="app">
     
   </div>
+  <h1>Who Wants To Be a Millionaire</h1>
 </template>
 
 <script>
