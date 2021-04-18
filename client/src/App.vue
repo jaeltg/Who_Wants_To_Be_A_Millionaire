@@ -9,7 +9,15 @@
 
 export default {
   name: 'App',
+  data() {
+    return {
+      questions: [],
+      currentQuestion: null,
+      currentState
+    }
+  },
   components: {
+    
    
   }
 }
