@@ -1,24 +1,22 @@
 <template>
   <div id="app">
-    <h1>Who Wants to Be a Millioner</h1>
+    <h1>Who Wants to Be a Millionaire</h1>
+    <gameplay />
   </div>
 </template>
 
 <script>
-import {shuffle} from 'lodash'
+import Gameplay from './components/Gameplay.vue'
 
 export default {
   name: 'App',
   data() {
     return {
-      questions: [],
-      currentQuestion: null,
-      currentState,
-      currentAnswers: []
+      // currentState,
     }
   },
   components: {
-    
+    'gameplay': Gameplay
    
   }
 }
