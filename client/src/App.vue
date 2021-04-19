@@ -2,7 +2,6 @@
   <div id="app">
     <h1>Who Wants to Be a Millioner</h1>
   </div>
-  <h1>Who Wants To Be a Millionaire</h1>
 </template>
 
 <script>
