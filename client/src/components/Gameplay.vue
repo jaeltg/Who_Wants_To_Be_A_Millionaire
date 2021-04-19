@@ -33,6 +33,7 @@
 
 <script>
 import {shuffle} from 'lodash';
+import { eventBus } from '@/main.js'
 
 export default {   
 name: 'gameplay',
@@ -45,13 +46,17 @@ data() {
         indexCounter: 0,
         currentPrize: 0,
         lost: false,
+        active: false
+
     }
 },
 
 mounted() {
-    this.getAllQuestions()
-
+    eventBus.$on('reset-gameplay', (payload) => {
+        this.active = payload[0]
+    })
 },
+
 methods: {
     getAllQuestions: async function() {
         const responseEasy = await fetch('https://opentdb.com/api.php?amount=5&difficulty=easy&type=multiple')
@@ -96,9 +101,9 @@ methods: {
             this.getCurrentAnswers(this.indexCounter)
             this.currentPrize = this.moneyList[this.indexCounter - 1]
         }
-        else if (answer.correct && this.indexCounter === 14){
-            return
-        }
+        // else if (answer.correct && this.indexCounter === 14){
+        //     return
+        // }
         else {
             this.lost = true;
             if (this.indexCounter < 4) {
@@ -109,15 +114,11 @@ methods: {
             }
             else if (this.indexCounter < 14){
                 this.currentPrize = "32,000"
-            }
-           
-                
-            }
-            
-        }
-    },
-    
-    restartGame: function() {
+            }        
+          } 
+        },
+        
+        restartGame: function() {
         this.lost = false
         this.indexCounter = 0
         this.getAllQuestions()
@@ -125,10 +126,17 @@ methods: {
         .then(this.getCurrentAnswers(this.indexCounter))
         this.currentPrize = 0
     }
-
- 
+    },
+    watch: {
+    active: function() {
+        this.getAllQuestions()
+        .then(this.getCurrentAnswers(this.indexCounter))
+        .then(this.getCurrentQuestion(this.indexCounter))
+        }
+    },
+    
+    
 }
-
 
 </script>
 
