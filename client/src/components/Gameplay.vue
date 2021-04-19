@@ -2,11 +2,14 @@
   <div>
       <button @click="getCurrentAnswers(indexCounter); getCurrentQuestion(indexCounter);">Get Answers</button>
       <div>
-      <ul>
+      <!-- <ul v-for="(money, index) in moneyList" :key="index">
           <li>
+              <p>£{{money}}</p>
           </li>
-      </ul>
+      </ul> -->
+      <p>{{currentPrize}}</p>
       </div>
+      <section v-if="!lost">
       <div>
           <h2 v-html="currentQuestion">{{currentQuestion}}</h2>
           <ul v-for="(answer, index) in currentAnswers" :key="index">
@@ -14,7 +17,17 @@
                  <button v-html="answer.answer">{{answer.answer}}</button>
              </li>
           </ul>
+          <button>Take my Money!</button>
       </div>
+      </section>
+      <section v-else>
+          <div>
+              <h2>Name, you are a disappointment!!</h2>
+              <p>You leave with £{{currentPrize}}</p>
+            <button @click="restartGame" >Redeem yourself, loser!</button>
+            <button>Go to Main Page</button>
+          </div>
+      </section>
   </div>
 </template>
 
@@ -28,8 +41,10 @@ data() {
         questions: [],
         currentQuestion: null,
         currentAnswers: [],
-        moneyList: [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000, 64000, 125000, 250000, 500000, 1000000],
-        indexCounter: 0
+        moneyList: ["100", "200", "300", "500", "1,000", "2,000", "4,000", "8,000", "16,000", "32,000", "64,000", "125,000", "250,000", "500,000", "1 MILLION"],
+        indexCounter: 0,
+        currentPrize: 0,
+        lost: false,
     }
 },
 
@@ -79,15 +94,42 @@ methods: {
             this.indexCounter ++;
             this.getCurrentQuestion(this.indexCounter)
             this.getCurrentAnswers(this.indexCounter)
+            this.currentPrize = this.moneyList[this.indexCounter - 1]
         }
-        else {
+        else if (answer.correct && this.indexCounter === 14){
             return
         }
+        else {
+            this.lost = true;
+            if (this.indexCounter < 4) {
+                this.currentPrize = 0
+            }
+            else if (this.indexCounter < 9){
+                this.currentPrize = "1,000"
+            }
+            else if (this.indexCounter < 14){
+                this.currentPrize = "32,000"
+            }
+           
+                
+            }
+            
+        }
+    },
+    
+    restartGame: function() {
+        this.lost = false
+        this.indexCounter = 0
+        this.getAllQuestions()
+        .then(this.getCurrentQuestion(this.indexCounter))
+        .then(this.getCurrentAnswers(this.indexCounter))
+        this.currentPrize = 0
     }
+
  
 }
 
-}
+
 </script>
 
 <style>
