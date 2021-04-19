@@ -1,12 +1,11 @@
 <template>
-  <div>
+  <div id="grid-container">
       <div>
-      <!-- <ul v-for="(money, index) in moneyList" :key="index">
+      <ul v-for="(money, index) in moneyList" :key="index" id="money-list">
           <li>
               <p>£{{money}}</p>
           </li>
-      </ul> -->
-      <p>{{currentPrize}}</p>
+      </ul>
       </div>
       <section v-if="!lost">
       <div>
@@ -43,6 +42,7 @@ data() {
         indexCounter: 0,
         currentPrize: 0,
         lost: false,
+        moneyDisplay: ["1 MILLION", "500,000", "250,000"],
     }
 },
 props: ["questions"],
@@ -115,6 +115,13 @@ methods: {
 
 </script>
 
-<style>
-
+<style scoped>
+#grid-container {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+}
+#money-list {
+    display: flex;
+    flex-direction: column;
+}
 </style>
