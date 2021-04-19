@@ -1,11 +1,11 @@
 <template>
   <div id="app">
-    Welcome to millionaires!!!
+    <h1>Who Wants to Be a Millioner</h1>
   </div>
 </template>
 
 <script>
-
+import {shuffle} from 'lodash'
 
 export default {
   name: 'App',
@@ -13,7 +13,8 @@ export default {
     return {
       questions: [],
       currentQuestion: null,
-      currentState
+      currentState,
+      currentAnswers: []
     }
   },
   components: {
