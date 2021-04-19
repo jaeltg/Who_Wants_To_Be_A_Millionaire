@@ -1,6 +1,5 @@
 <template>
   <div>
-      <button @click="getCurrentAnswers(indexCounter); getCurrentQuestion(indexCounter);">Get Answers</button>
       <div>
       <!-- <ul v-for="(money, index) in moneyList" :key="index">
           <li>
@@ -25,7 +24,6 @@
               <h2>Name, you are a disappointment!!</h2>
               <p>You leave with £{{currentPrize}}</p>
             <button @click="restartGame" >Redeem yourself, loser!</button>
-            <button>Go to Main Page</button>
           </div>
       </section>
   </div>
@@ -39,41 +37,24 @@ export default {
 name: 'gameplay',
 data() {
     return {
-        questions: [],
         currentQuestion: null,
         currentAnswers: [],
         moneyList: ["100", "200", "300", "500", "1,000", "2,000", "4,000", "8,000", "16,000", "32,000", "64,000", "125,000", "250,000", "500,000", "1 MILLION"],
         indexCounter: 0,
         currentPrize: 0,
         lost: false,
-        active: false
-
     }
 },
+props: ["questions"],
 
 mounted() {
-    eventBus.$on('reset-gameplay', (payload) => {
-        this.active = payload[0]
-    })
+     this.getCurrentAnswers(this.indexCounter)
+     this.getCurrentQuestion(this.indexCounter)
+    
+    
 },
 
 methods: {
-    getAllQuestions: async function() {
-        const responseEasy = await fetch('https://opentdb.com/api.php?amount=5&difficulty=easy&type=multiple')
-        const dataEasy = await responseEasy.json()
-        const questionsEasy = dataEasy.results
-
-        const responseMedium = await fetch('https://opentdb.com/api.php?amount=5&difficulty=medium&type=multiple')
-        const dataMedium = await responseMedium.json()
-        const questionsMedium = dataMedium.results
-
-        const responseHard = await fetch('https://opentdb.com/api.php?amount=5&difficulty=hard&type=multiple')
-        const dataHard = await responseHard.json()
-        const questionsHard = dataHard.results
-
-        this.questions = questionsEasy.concat(questionsMedium, questionsHard)
-        
-    },
 
     getCurrentQuestion: function(index) {
         this.currentQuestion = this.questions[index].question
@@ -118,21 +99,15 @@ methods: {
           } 
         },
         
-        restartGame: function() {
-        this.lost = false
-        this.indexCounter = 0
-        this.getAllQuestions()
-        .then(this.getCurrentQuestion(this.indexCounter))
-        .then(this.getCurrentAnswers(this.indexCounter))
-        this.currentPrize = 0
+        restartGame: async function() {
+        eventBus.$emit('go-home')
+        // eventBus.$emit('restart-gameplay')
+        // await this.getCurrentQuestion(this.indexCounter)
+        // await this.getCurrentAnswers(this.indexCounter)
+        // this.lost = false
+        // this.indexCounter = 0
+        // this.currentPrize = 0
     }
-    },
-    watch: {
-    active: function() {
-        this.getAllQuestions()
-        .then(this.getCurrentAnswers(this.indexCounter))
-        .then(this.getCurrentQuestion(this.indexCounter))
-        }
     },
     
     
