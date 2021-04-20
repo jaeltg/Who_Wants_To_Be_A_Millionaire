@@ -5,6 +5,7 @@
     <label for="name">Please enter your name</label> 
     <br>     
     <input id="name" type="text" v-model="name">
+    <br>
     <input type="submit" value="Start Game" id="submit">
     <!-- <button @click="handleClick">Start Game</button> -->
     </form>
@@ -37,11 +38,11 @@ export default {
 #home-component {
     text-align: center
 }
-/* button {
+#submit {
     display: block;
     padding: 20px;
     margin-right: auto;
     margin-left: auto;
     margin-top:20px
-} */
+}
 </style>
