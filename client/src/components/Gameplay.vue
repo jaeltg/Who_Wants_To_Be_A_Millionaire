@@ -20,7 +20,7 @@
               
           <ol>
               <li v-for="(answer, index) in currentAnswers" :key="index" @click="checkAnswer(answer); answerSelected($event, answer)">
-                 <button v-html="answer.answer" :class="answer.selected ? 'selected' : 'not-selected'" :id="answer.correct ? 'correct' : 'incorrect'" :disabled="answer.inactive">{{answer.answer}}</button>
+                 <button v-html="answer.answer" :class="answer.selected ? 'selected' : 'not-selected'" :id="answer.right ? 'right' : 'wrong'" :disabled="answer.inactive">{{answer.answer}}</button>
              </li>
           </ol>
           <button v-if="indexCounter>0" @click="takeMoney()">Take my Money!</button>
@@ -106,7 +106,7 @@ methods: {
         })
         const answerCorrect =this.questions[index].correct_answer
         this.currentAnswerCorrect = answerCorrect
-        answers.push({answer: answerCorrect, correct: true, selected: false, inactive: false})
+        answers.push({answer: answerCorrect, correct: true, right: false, selected: false, inactive: false})
 
         let shuffledArray = shuffle(answers)
         this.currentAnswers = shuffledArray
@@ -115,17 +115,13 @@ methods: {
     // handleClick function - on click select answer (change select to true) then do check answer function which has the timeout and does the green to the right answer
     answerSelected: function(event, answer) {
         answer.selected = true
+        setTimeout(() => {
         for (const answer of this.currentAnswers) {
             if (answer.correct === true) {
-                this.addClassIfCorrect = true
+                answer.right = true
             }
         }
-        
-        // for (answer in this.currentAnswers) {
-        // if (answer.correct) {
-        //     li.classList.add('correct');
-        // }
-        // }
+        }, 1000)
     },
     
     checkAnswer: function(answer) {
@@ -155,7 +151,7 @@ methods: {
             }  
         }      
           } 
-        , 1000)
+        , 2000)
     },
 
         // addKeysToMoneyList: function() {
@@ -238,7 +234,7 @@ list-style-type: upper-alpha;
     background-color: orange
 }
 
-#correct {
+#right {
     background-color: greenyellow;
     /* padding: 20px; */
 }
