@@ -13,11 +13,13 @@
       </div>
       <section v-if="!lost">
       <div>
+          <img v-if="displayingGraph" :src="require(`../../../client/public/images/${correctAnswerIndex}.png`)" alt="">
           <h3>{{phoneFriendMessage}}</h3>
           <h2 v-html="currentQuestion">{{currentQuestion}}</h2>
           <ul v-for="(answer, index) in currentAnswers" :key="index">
               <li @click="checkAnswer(answer); answerSelected($event, answer)">
-                 <button id="button" v-html="answer.answer" :class="answer.selected ? 'selected' : 'not-selected'">{{answer.answer}}</button>
+                 <button id="button" v-html="answer.answer" :class="answer.selected ? 'selected' : 'not-selected'" 
+                 :disabled="answer.inactive" >{{answer.answer}}</button>
              </li>
           </ul>
           <button v-if="indexCounter>0" @click="takeMoney()">Take my Money!</button>
@@ -52,7 +54,9 @@ data() {
         winner: false,
         // moneyWithKeys: [],
         currentAnswerCorrect: null,
-        phoneFriendMessage: ""
+        phoneFriendMessage: "",
+        correctAnswerIndex: null,
+        displayingGraph: false
        
        
     }
@@ -74,6 +78,11 @@ mounted() {
 
     eventBus.$on('phoneAFriend', () => {
         this.phoneFriendMessage = "Your friend thinks the correct answer is " + this.currentAnswerCorrect
+    }),
+
+    eventBus.$on('askAudience', () => {
+        this.askAudience()
+        this.displayingGraph = true
     })
     
 },
@@ -89,12 +98,12 @@ methods: {
         let answers = []
         const answersWrong = this.questions[index].incorrect_answers // [answer, answer, ...]
         answersWrong.forEach( incorrectAnswer => {
-                const fullAnswer = {answer: incorrectAnswer, correct: false, selected: false} // in here add selected key?
+                const fullAnswer = {answer: incorrectAnswer, correct: false, selected: false, inactive: false} // in here add selected key?
                 answers.push(fullAnswer)       
         })
         const answerCorrect =this.questions[index].correct_answer
         this.currentAnswerCorrect = answerCorrect
-        answers.push({answer: answerCorrect, correct: true, selected: false})
+        answers.push({answer: answerCorrect, correct: true, selected: false, inactive: false})
 
         let shuffledArray = shuffle(answers)
         this.currentAnswers = shuffledArray
@@ -118,6 +127,7 @@ methods: {
             this.currentPrize = this.moneyList[this.indexCounter - 1]
             this.potentialPrize = this.moneyList[this.indexCounter]
             this.phoneFriendMessage = ""
+            this.displayingGraph = false
         }
         else if (answer.correct && this.indexCounter === 14){
             eventBus.$emit('winner')
@@ -166,18 +176,23 @@ methods: {
     },
 
     get5050: function() {
-        const currentAnswersCopy = [...this.currentAnswers]
+        // const currentAnswersCopy = [...this.currentAnswers]
         for (var i = 0; i<3; i++) {
             // Create a clone of the this.currentAnswers Array
             // if (this.currentAnswerCloneArray[i] ===false)
             // then delete the item from the real array where the index matches
-            if (currentAnswersCopy[i].correct === false){
-                this.currentAnswers.splice(i, 1)
+            if (this.currentAnswers[i].correct === false){
+                this.currentAnswers[i].inactive = true
             }
+        } 
+    },
+    askAudience: function() {
+        for (const answer of this.currentAnswers) {
+            if (answer.correct === true)
+            this.correctAnswerIndex = this.currentAnswers.indexOf(answer)
         }
-        
-      
-     
+
+
     }
 
     },
