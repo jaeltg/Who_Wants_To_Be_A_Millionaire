@@ -2,7 +2,7 @@
     <div>
         <button @click="get5050()" v-if="fiftyFiftyActive" >50 : 50</button>
         <button @click="phoneAFriend()" v-if="phoneAFriendActive">Phone a friend</button>
-        <button>Ask the audience</button>
+        <button @click="askAudience()" v-if="askAudienceActive">Ask the audience</button>
     </div>
   
 </template>
@@ -15,7 +15,8 @@ export default {
     data() {
         return {
             fiftyFiftyActive: true,
-            phoneAFriendActive: true
+            phoneAFriendActive: true,
+            askAudienceActive: true
         }
     },
     methods: {
@@ -26,6 +27,10 @@ export default {
         phoneAFriend: function() {
             eventBus.$emit('phoneAFriend');
             this.phoneAFriendActive = false
+        },
+        askAudience: function() {
+            eventBus.$emit('askAudience');
+            this.askAudienceActive = false;
         }
     }
 
