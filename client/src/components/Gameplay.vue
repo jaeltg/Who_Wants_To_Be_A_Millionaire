@@ -15,8 +15,8 @@
       <div>
           <h2 v-html="currentQuestion">{{currentQuestion}}</h2>
           <ul v-for="(answer, index) in currentAnswers" :key="index">
-              <li @click="checkAnswer(answer)">
-                 <button v-html="answer.answer">{{answer.answer}}</button>
+              <li @click="checkAnswer(answer); answerSelected($event, answer)">
+                 <button id="button" v-html="answer.answer" :class="answer.selected ? 'selected' : 'not-selected'">{{answer.answer}}</button>
              </li>
           </ul>
           <button v-if="indexCounter>0" @click="takeMoney()">Take my Money!</button>
@@ -82,17 +82,27 @@ methods: {
         let answers = []
         const answersWrong = this.questions[index].incorrect_answers // [answer, answer, ...]
         answersWrong.forEach( incorrectAnswer => {
-                const fullAnswer = {answer: incorrectAnswer, correct: false}
+                const fullAnswer = {answer: incorrectAnswer, correct: false, selected: false} // in here add selected key?
                 answers.push(fullAnswer)       
         })
         const answerCorrect =this.questions[index].correct_answer
-        answers.push({answer: answerCorrect, correct: true})
+        answers.push({answer: answerCorrect, correct: true, selected: false})
 
         let shuffledArray = shuffle(answers)
         this.currentAnswers = shuffledArray
     },
 
+    // handleClick function - on click select answer (change select to true) then do check answer function which has the timeout and does the green to the right answer
+    answerSelected: function(event, answer) {
+        answer.selected = true
+        // for (answer of this.currentAnswers) {
+        if (answer.correct) {
+            event.target.classList.add('correct')
+        }
+        },
+    
     checkAnswer: function(answer) {
+        setTimeout(() => {
         if (answer.correct && this.indexCounter < 14) {
             this.indexCounter ++;
             this.getCurrentQuestion(this.indexCounter)
@@ -113,9 +123,11 @@ methods: {
             }
             else if (this.indexCounter < 14){
                 this.currentPrize = "32,000"
-            }        
+            }  
+        }      
           } 
-        },
+        , 1000)
+    },
 
         // addKeysToMoneyList: function() {
         //     this.moneyList.forEach((money) => {
@@ -140,7 +152,6 @@ methods: {
     },
 
     takeMoney: function(){
-        console.log("TAKING MONEY!!!!!!!!!!!!");
         eventBus.$emit('take-money', this.currentPrize);
         
     },
@@ -183,6 +194,23 @@ list-style: none;
 }
 
 .highlight {
-    background-color: hotpink
+    background-color: orange;
 }
+
+/* #button {
+    background-color: none;
+    transition: ease-in-out, background-color 1s ease-in-out;
+}
+#button:focus{
+    background-color: orange;  
+} */
+
+.selected {
+    background-color: orange
+}
+
+.correct {
+    background-color: greenyellow
+}
+
 </style>
