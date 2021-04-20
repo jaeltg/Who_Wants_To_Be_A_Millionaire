@@ -4,7 +4,7 @@
     <form @submit="handleClick" method="post">
     <label for="name">Please enter your name</label> 
     <br>     
-    <input id="name" type="text" v-model="name">
+    <input id="name" type="text" v-model="name" required>
     <br>
     <input type="submit" value="Start Game" id="submit">
     <!-- <button @click="handleClick">Start Game</button> -->
