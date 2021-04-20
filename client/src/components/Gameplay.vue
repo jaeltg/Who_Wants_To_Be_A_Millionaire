@@ -1,6 +1,8 @@
 <template>
+    
   <div id="grid-container">
       <div>
+          <life-lines />
       <ul v-for="(money, index) in moneyList.slice().reverse()" :key="index" id="money-list">
           <li v-if="potentialPrize === money" class="highlight">
               {{money}}
@@ -62,6 +64,10 @@ mounted() {
      this.getCurrentAnswers(this.indexCounter)
      this.getCurrentQuestion(this.indexCounter)
      this.addKeysToMoneyList()   
+
+     eventBus.$on('get5050', () => {
+        this.get5050()
+        }) 
     
 },
 
@@ -137,7 +143,28 @@ methods: {
         console.log("TAKING MONEY!!!!!!!!!!!!");
         eventBus.$emit('take-money', this.currentPrize);
         
+    },
+
+    get5050: function() {
+        for(var i = 0; i<3; i++) {
+            if(this.currentAnswers[i].correct === false){
+                this.currentAnswers.splice(i, 1)
+            }
+        }
+        // console.log("Player wants 50-50")
+        // this.currentAnswers.forEach((answer) => {
+        //     this.currentAnswers.splice(answer, 1)
+        // })
+        // for (answer of this.currentAnswers) {
+        //     if (answer.correct === false) {
+        //         this.currentAnswers.splice(answer, 1)
+        //     }
+        // }
+
+
+     
     }
+
     },
     
     
