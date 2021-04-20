@@ -111,7 +111,8 @@ methods: {
 
     takeMoney: function(){
         console.log("TAKING MONEY!!!!!!!!!!!!");
-        eventBus.$emit('take-money')
+        eventBus.$emit('take-money', this.currentPrize);
+        
     }
     },
     

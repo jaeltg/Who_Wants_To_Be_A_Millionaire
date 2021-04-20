@@ -3,7 +3,7 @@
     <h1>Who Wants to Be a Millionaire</h1>
     <home v-if="gameView==='home'"/>
     <gameplay v-if="gameView==='gameplay'" :questions="questions"/>
-    <take-money v-if="gameView==='take-money'"/>
+    <take-money v-if="gameView==='take-money'" :takeawayPrize="takeawayPrize"/>
     <!-- <win v-if="gameView='win'"/>  -->
   </div>
 </template>
@@ -19,7 +19,8 @@ export default {
   data() {
     return {
       gameView: "home",
-      questions: []
+      questions: [],
+      takeawayPrize: 0
     }
   },
   components: {
@@ -40,8 +41,10 @@ export default {
       this.getAllQuestions()
     })
 
-    eventBus.$on('take-money', () => {
+    eventBus.$on('take-money', (prize) => {
       this.gameView = "take-money"
+      console.log(prize)
+      this.takeawayPrize = prize
     })
 
     
