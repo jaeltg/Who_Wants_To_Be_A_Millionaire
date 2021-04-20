@@ -1,9 +1,11 @@
 <template>
   <div id="grid-container">
       <div>
-      <ul v-for="(money, index) in moneyList" :key="index" id="money-list">
-          <li>
-              <p>£{{money}}</p>
+      <ul v-for="(money, index) in moneyList.slice().reverse()" :key="index" id="money-list">
+          <li v-if="potentialPrize === money" class="highlight">
+              {{money}}
+              </li>
+             <li v-else class="normal"> <p>£{{money}}</p>
           </li>
       </ul>
       </div>
@@ -41,8 +43,10 @@ data() {
         moneyList: ["100", "200", "300", "500", "1,000", "2,000", "4,000", "8,000", "16,000", "32,000", "64,000", "125,000", "250,000", "500,000", "1 MILLION"],
         indexCounter: 0,
         currentPrize: 0,
+        potentialPrize: "100",
         lost: false,
-        moneyDisplay: ["1 MILLION", "500,000", "250,000"],
+        moneyWithKeys: []
+       
     }
 },
 props: ["questions"],
@@ -50,7 +54,7 @@ props: ["questions"],
 mounted() {
      this.getCurrentAnswers(this.indexCounter)
      this.getCurrentQuestion(this.indexCounter)
-    
+     this.addKeysToMoneyList()   
     
 },
 
@@ -81,6 +85,7 @@ methods: {
             this.getCurrentQuestion(this.indexCounter)
             this.getCurrentAnswers(this.indexCounter)
             this.currentPrize = this.moneyList[this.indexCounter - 1]
+            this.potentialPrize = this.moneyList[this.indexCounter]
         }
         // else if (answer.correct && this.indexCounter === 14){
         //     return
@@ -97,6 +102,18 @@ methods: {
                 this.currentPrize = "32,000"
             }        
           } 
+        },
+
+        addKeysToMoneyList: function() {
+            this.moneyList.forEach((money) => {
+                const prizeWithKeys = {quantity: money, basePrize: false}
+                this.moneyWithKeys.push(prizeWithKeys)
+            })
+            this.moneyWithKeys.forEach((money) => {
+                if (money.quantity === "1,000" || money.quantity === "32,000" || money.quantity === "1 MILLION") {
+                    money.basePrize = true
+                }
+            })
         },
         
         restartGame: async function() {
@@ -120,8 +137,8 @@ methods: {
     display: grid;
     grid-template-columns: 1fr 3fr;
 }
-#money-list {
-    display: flex;
-    flex-direction: column;
+
+.highlight {
+    background-color: hotpink
 }
 </style>
