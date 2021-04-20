@@ -63,7 +63,7 @@ props: ["questions", "name"],
 mounted() {
      this.getCurrentAnswers(this.indexCounter)
      this.getCurrentQuestion(this.indexCounter)
-     this.addKeysToMoneyList()   
+    //  this.addKeysToMoneyList()   
 
      eventBus.$on('get5050', () => {
         this.get5050()
