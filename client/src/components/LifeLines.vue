@@ -1,7 +1,7 @@
 <template>
     <div>
         <button @click="get5050()" v-if="fiftyFiftyActive">50 : 50</button>
-        <button>Phone a friend</button>
+        <button @click="phoneAFriend">Phone a friend</button>
         <button>Ask the audience</button>
     </div>
   
@@ -14,7 +14,8 @@ export default {
     name: "life-lines",
     data() {
         return {
-            fiftyFiftyActive: true
+            fiftyFiftyActive: true,
+            phoneAFriend: true
         }
     },
     methods: {
