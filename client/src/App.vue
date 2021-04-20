@@ -4,7 +4,7 @@
     <home v-if="gameView==='home'"/>
     <gameplay v-if="gameView==='gameplay'" :questions="questions"/>
     <take-money v-if="gameView==='take-money'" :takeawayPrize="takeawayPrize"/>
-    <!-- <win v-if="gameView='win'"/>  -->
+    <win v-if="gameView==='win'"/>
   </div>
 </template>
 
@@ -12,6 +12,7 @@
 import Gameplay from './components/Gameplay.vue'
 import Home from './components/Home.vue'
 import TakeMoney from './components/TakeMoney.vue'
+import Win from './components/Win.vue'
 import { eventBus } from '@/main.js'
 
 export default {
@@ -26,7 +27,8 @@ export default {
   components: {
     'gameplay': Gameplay,
     'home': Home,
-    'take-money':TakeMoney
+    'take-money':TakeMoney,
+    'win': Win
    
   },
   mounted() {
@@ -34,8 +36,8 @@ export default {
     
     eventBus.$on('start-gameplay', () => {
         this.gameView = "gameplay"
-        })
-
+        }) 
+        
     eventBus.$on('go-home', () => {
       this.takeawayPrize = 0
       this.gameView = "home"
@@ -46,13 +48,14 @@ export default {
       this.gameView = "take-money"
       console.log(prize)
       this.takeawayPrize = prize
-    })
+    })  
 
+    eventBus.$on('winner', () => {
+      this.gameView = "win"
+    })
     
     },
-        
-     
-  
+    
   methods: {
     getAllQuestions: async function() {
         const responseEasy = await fetch('https://opentdb.com/api.php?amount=5&difficulty=easy&type=multiple')
