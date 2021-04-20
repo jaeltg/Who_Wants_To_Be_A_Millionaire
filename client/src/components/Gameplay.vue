@@ -49,7 +49,7 @@ data() {
         potentialPrize: "100",
         lost: false,
         winner: false,
-        moneyWithKeys: [],
+        // moneyWithKeys: [],
        
        
     }
@@ -117,17 +117,17 @@ methods: {
           } 
         },
 
-        addKeysToMoneyList: function() {
-            this.moneyList.forEach((money) => {
-                const prizeWithKeys = {quantity: money, basePrize: false}
-                this.moneyWithKeys.push(prizeWithKeys)
-            })
-            this.moneyWithKeys.forEach((money) => {
-                if (money.quantity === "1,000" || money.quantity === "32,000" || money.quantity === "1 MILLION") {
-                    money.basePrize = true
-                }
-            })
-        },
+        // addKeysToMoneyList: function() {
+        //     this.moneyList.forEach((money) => {
+        //         const prizeWithKeys = {quantity: money, basePrize: false}
+        //         this.moneyWithKeys.push(prizeWithKeys)
+        //     })
+        //     this.moneyWithKeys.forEach((money) => {
+        //         if (money.quantity === "1,000" || money.quantity === "32,000" || money.quantity === "1 MILLION") {
+        //             money.basePrize = true
+        //         }
+        //     })
+        // },
         
         restartGame: async function() {
         eventBus.$emit('go-home')
