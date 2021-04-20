@@ -17,7 +17,7 @@
           <h2 v-html="currentQuestion">{{currentQuestion}}</h2>
           <ol>
               <li v-for="(answer, index) in currentAnswers" :key="index" @click="checkAnswer(answer); answerSelected($event, answer)">
-                 <button id="button" v-html="answer.answer" :class="answer.selected ? 'selected' : 'not-selected'">{{answer.answer}}</button>
+                 <button v-html="answer.answer" :class="answer.selected ? 'selected' : 'not-selected'" :id="answer.correct ? 'correct' : 'incorrect'">{{answer.answer}}</button>
              </li>
           </ol>
           <button v-if="indexCounter>0" @click="takeMoney()">Take my Money!</button>
@@ -30,6 +30,7 @@
             <button @click="restartGame" >Redeem yourself, loser!</button>
           </div>
       </section>
+      
   </div>
 </template>
 
@@ -52,7 +53,8 @@ data() {
         winner: false,
         // moneyWithKeys: [],
         currentAnswerCorrect: null,
-        phoneFriendMessage: ""
+        phoneFriendMessage: "",
+        AddClassIfCorrect: false
        
        
     }
@@ -103,11 +105,18 @@ methods: {
     // handleClick function - on click select answer (change select to true) then do check answer function which has the timeout and does the green to the right answer
     answerSelected: function(event, answer) {
         answer.selected = true
-        // for (answer of this.currentAnswers) {
-        if (answer.correct) {
-            event.target.classList.add('correct')
+        for (const answer of this.currentAnswers) {
+            if (answer.correct === true) {
+                this.addClassIfCorrect = true
+            }
         }
-        },
+        
+        // for (answer in this.currentAnswers) {
+        // if (answer.correct) {
+        //     li.classList.add('correct');
+        // }
+        // }
+    },
     
     checkAnswer: function(answer) {
         setTimeout(() => {
@@ -213,8 +222,9 @@ list-style-type: upper-alpha;
     background-color: orange
 }
 
-.correct {
-    background-color: greenyellow
+#correct {
+    background-color: greenyellow;
+    /* padding: 20px; */
 }
 
 </style>
