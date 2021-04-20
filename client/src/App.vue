@@ -37,6 +37,7 @@ export default {
         })
 
     eventBus.$on('go-home', () => {
+      this.takeawayPrize = 0
       this.gameView = "home"
       this.getAllQuestions()
     })
