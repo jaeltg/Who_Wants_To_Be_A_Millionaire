@@ -14,11 +14,11 @@
       <section v-if="!lost">
       <div>
           <h2 v-html="currentQuestion">{{currentQuestion}}</h2>
-          <ul v-for="(answer, index) in currentAnswers" :key="index">
-              <li @click="checkAnswer(answer); answerSelected($event, answer)">
+          <ol>
+              <li v-for="(answer, index) in currentAnswers" :key="index" @click="checkAnswer(answer); answerSelected($event, answer)">
                  <button id="button" v-html="answer.answer" :class="answer.selected ? 'selected' : 'not-selected'">{{answer.answer}}</button>
              </li>
-          </ul>
+          </ol>
           <button v-if="indexCounter>0" @click="takeMoney()">Take my Money!</button>
       </div>
       </section>
@@ -184,8 +184,8 @@ methods: {
 </script>
 
 <style scoped>
-ul {
-list-style: none;
+ol {
+list-style-type: upper-alpha;
 }
 
 #grid-container {
