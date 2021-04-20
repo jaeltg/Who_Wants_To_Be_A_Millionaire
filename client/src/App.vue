@@ -3,14 +3,15 @@
     <h1>Who Wants to Be a Millionaire</h1>
     <home v-if="gameView==='home'"/>
     <gameplay v-if="gameView==='gameplay'" :questions="questions"/>
-    <!-- <take-money v-if="gameView='take-money'"/>
-    <win v-if="gameView='win'"/> -->
+    <take-money v-if="gameView==='take-money'"/>
+    <!-- <win v-if="gameView='win'"/>  -->
   </div>
 </template>
 
 <script>
 import Gameplay from './components/Gameplay.vue'
 import Home from './components/Home.vue'
+import TakeMoney from './components/TakeMoney.vue'
 import { eventBus } from '@/main.js'
 
 export default {
@@ -23,7 +24,8 @@ export default {
   },
   components: {
     'gameplay': Gameplay,
-    'home': Home
+    'home': Home,
+    'take-money':TakeMoney
    
   },
   mounted() {
@@ -31,16 +33,22 @@ export default {
     
     eventBus.$on('start-gameplay', () => {
         this.gameView = "gameplay"
+        })
 
     eventBus.$on('go-home', () => {
       this.gameView = "home"
       this.getAllQuestions()
+    })
+
+    eventBus.$on('take-money', () => {
+      this.gameView = "take-money"
+    })
 
     
-    })
+    },
         
-    })  
-  },
+     
+  
   methods: {
     getAllQuestions: async function() {
         const responseEasy = await fetch('https://opentdb.com/api.php?amount=5&difficulty=easy&type=multiple')

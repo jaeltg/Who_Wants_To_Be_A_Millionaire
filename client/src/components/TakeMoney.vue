@@ -1,5 +1,7 @@
 <template>
-  
+  <div>
+      TAKE MY MONEY!!!
+  </div>
 </template>
 
 <script>

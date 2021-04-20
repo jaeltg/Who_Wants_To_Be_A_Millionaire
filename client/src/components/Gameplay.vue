@@ -15,7 +15,7 @@
                  <button v-html="answer.answer">{{answer.answer}}</button>
              </li>
           </ul>
-          <button>Take my Money!</button>
+          <button v-if="indexCounter>0" @click="takeMoney()">Take my Money!</button>
       </div>
       </section>
       <section v-else>
@@ -107,6 +107,11 @@ methods: {
         // this.lost = false
         // this.indexCounter = 0
         // this.currentPrize = 0
+    },
+
+    takeMoney: function(){
+        console.log("TAKING MONEY!!!!!!!!!!!!");
+        eventBus.$emit('take-money')
     }
     },
     
