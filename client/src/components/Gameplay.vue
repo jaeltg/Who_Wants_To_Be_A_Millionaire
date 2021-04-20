@@ -45,7 +45,9 @@ data() {
         currentPrize: 0,
         potentialPrize: "100",
         lost: false,
-        moneyWithKeys: []
+        winner: false,
+        moneyWithKeys: [],
+       
        
     }
 },
@@ -87,9 +89,9 @@ methods: {
             this.currentPrize = this.moneyList[this.indexCounter - 1]
             this.potentialPrize = this.moneyList[this.indexCounter]
         }
-        // else if (answer.correct && this.indexCounter === 14){
-        //     return
-        // }
+        else if (answer.correct && this.indexCounter === 14){
+            eventBus.$emit('winner')
+        }
         else {
             this.lost = true;
             if (this.indexCounter < 4) {
