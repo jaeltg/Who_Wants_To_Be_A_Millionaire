@@ -3,7 +3,7 @@
       <div>
       <ul v-for="(money, index) in moneyList.slice().reverse()" :key="index" id="money-list">
           <li v-if="potentialPrize === money" class="highlight">
-              {{money}}
+              £{{money}}
               </li>
              <li v-else class="normal"> <p>£{{money}}</p>
           </li>
@@ -22,7 +22,7 @@
       </section>
       <section v-else>
           <div>
-              <h2>Name, you are a disappointment!!</h2>
+              <h2>{{name}}, you are a disappointment!!</h2>
               <p>You leave with £{{currentPrize}}</p>
             <button @click="restartGame" >Redeem yourself, loser!</button>
           </div>
@@ -51,7 +51,7 @@ data() {
        
     }
 },
-props: ["questions"],
+props: ["questions", "name"],
 
 mounted() {
      this.getCurrentAnswers(this.indexCounter)
@@ -141,6 +141,10 @@ methods: {
 </script>
 
 <style scoped>
+ul {
+list-style: none;
+}
+
 #grid-container {
     display: grid;
     grid-template-columns: 1fr 3fr;

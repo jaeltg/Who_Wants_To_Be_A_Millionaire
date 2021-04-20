@@ -1,10 +1,11 @@
 <template>
   <div id="app">
-    <h1>Who Wants to Be a Millionaire</h1>
+    <img src="images/millioners-logo.png" alt="Who Wants to be a Millioner!" id="logo">
     <home v-if="gameView==='home'"/>
-    <gameplay v-if="gameView==='gameplay'" :questions="questions"/>
-    <take-money v-if="gameView==='take-money'" :takeawayPrize="takeawayPrize"/>
-    <win v-if="gameView==='win'"/>
+    <gameplay v-if="gameView==='gameplay'" :questions="questions" :name="name"/>
+    <take-money v-if="gameView==='take-money'" :takeawayPrize="takeawayPrize" :name="name"/>
+    <win v-if="gameView==='win'" :name="name":/>
+    <prize v-if="gameView==='prize'"/>
   </div>
 </template>
 
@@ -13,6 +14,7 @@ import Gameplay from './components/Gameplay.vue'
 import Home from './components/Home.vue'
 import TakeMoney from './components/TakeMoney.vue'
 import Win from './components/Win.vue'
+import Prize from './components/Prize.vue'
 import { eventBus } from '@/main.js'
 
 export default {
@@ -21,14 +23,16 @@ export default {
     return {
       gameView: "home",
       questions: [],
-      takeawayPrize: 0
+      takeawayPrize: 0,
+      name: null
     }
   },
   components: {
     'gameplay': Gameplay,
     'home': Home,
     'take-money':TakeMoney,
-    'win': Win
+    'win': Win,
+    'prize': Prize
    
   },
   mounted() {
@@ -46,14 +50,19 @@ export default {
 
     eventBus.$on('take-money', (prize) => {
       this.gameView = "take-money"
-      console.log(prize)
       this.takeawayPrize = prize
     })  
 
     eventBus.$on('winner', () => {
       this.gameView = "win"
     })
-    
+    eventBus.$on('get-prize', () => {
+      this.gameView = "prize"
+    })
+
+    eventBus.$on('name', (name) => {
+      this.name = name
+    })  
     },
     
   methods: {
@@ -78,12 +87,21 @@ export default {
 </script>
 
 <style>
+body {
+ background: rgb(9,9,121);
+ background: linear-gradient(90deg, rgba(9,9,121,1) 0%, rgba(95,27,196,1) 50%, rgba(9,9,121,1) 100%);
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+  color: white;
+  margin-top: 20px;
+}
+
+#logo {
+  width:200px;
+  height:200px;
 }
 </style>
