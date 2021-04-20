@@ -1,7 +1,7 @@
 <template>
     <div>
         <button @click="get5050()" v-if="fiftyFiftyActive">50 : 50</button>
-        <button @click="phoneAFriend">Phone a friend</button>
+        <button @click="phoneAFriend()">Phone a friend</button>
         <button>Ask the audience</button>
     </div>
   
