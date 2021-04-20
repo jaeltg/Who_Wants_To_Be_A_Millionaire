@@ -1,6 +1,7 @@
 <template>
   <div id="grid-container">
       <div>
+          <life-lines />
       <ul v-for="(money, index) in moneyList" :key="index" id="money-list">
           <li>
               <p>£{{money}}</p>
@@ -29,6 +30,7 @@
 </template>
 
 <script>
+import LifeLines from '../components/LifeLines.vue'
 import {shuffle} from 'lodash';
 import { eventBus } from '@/main.js'
 
@@ -46,6 +48,10 @@ data() {
     }
 },
 props: ["questions"],
+components: {
+    'life-lines': LifeLines
+   
+  },
 
 mounted() {
      this.getCurrentAnswers(this.indexCounter)
