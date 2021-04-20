@@ -46,6 +46,7 @@ export default {
       this.takeawayPrize = 0
       this.gameView = "home"
       this.getAllQuestions()
+      
     })
 
     eventBus.$on('take-money', (prize) => {

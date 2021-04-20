@@ -13,6 +13,7 @@
       </div>
       <section v-if="!lost">
       <div>
+          <h3>{{phoneFriendMessage}}</h3>
           <h2 v-html="currentQuestion">{{currentQuestion}}</h2>
           <ul v-for="(answer, index) in currentAnswers" :key="index">
               <li @click="checkAnswer(answer)">
@@ -50,6 +51,8 @@ data() {
         lost: false,
         winner: false,
         // moneyWithKeys: [],
+        currentAnswerCorrect: null,
+        phoneFriendMessage: ""
        
        
     }
@@ -67,7 +70,11 @@ mounted() {
 
      eventBus.$on('get5050', () => {
         this.get5050()
-        }) 
+        }) ,
+
+    eventBus.$on('phoneAFriend', () => {
+        this.phoneFriendMessage = "Your friend thinks the correct answer is " + this.currentAnswerCorrect
+    })
     
 },
 
@@ -86,6 +93,7 @@ methods: {
                 answers.push(fullAnswer)       
         })
         const answerCorrect =this.questions[index].correct_answer
+        this.currentAnswerCorrect = answerCorrect
         answers.push({answer: answerCorrect, correct: true})
 
         let shuffledArray = shuffle(answers)
@@ -99,6 +107,7 @@ methods: {
             this.getCurrentAnswers(this.indexCounter)
             this.currentPrize = this.moneyList[this.indexCounter - 1]
             this.potentialPrize = this.moneyList[this.indexCounter]
+            this.phoneFriendMessage = ""
         }
         else if (answer.correct && this.indexCounter === 14){
             eventBus.$emit('winner')
@@ -146,22 +155,17 @@ methods: {
     },
 
     get5050: function() {
-        for(var i = 0; i<3; i++) {
-            if(this.currentAnswers[i].correct === false){
+        const currentAnswersCopy = [...this.currentAnswers]
+        for (var i = 0; i<3; i++) {
+            // Create a clone of the this.currentAnswers Array
+            // if (this.currentAnswerCloneArray[i] ===false)
+            // then delete the item from the real array where the index matches
+            if (currentAnswersCopy[i].correct === false){
                 this.currentAnswers.splice(i, 1)
             }
         }
-        // console.log("Player wants 50-50")
-        // this.currentAnswers.forEach((answer) => {
-        //     this.currentAnswers.splice(answer, 1)
-        // })
-        // for (answer of this.currentAnswers) {
-        //     if (answer.correct === false) {
-        //         this.currentAnswers.splice(answer, 1)
-        //     }
-        // }
-
-
+        
+      
      
     }
 
