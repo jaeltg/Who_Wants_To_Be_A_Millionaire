@@ -35,143 +35,143 @@ import {shuffle} from 'lodash';
 import { eventBus } from '@/main.js'
 
 export default {   
-name: 'gameplay',
-data() {
-    return {
-        currentQuestion: null,
-        currentAnswers: [],
-        moneyList: ["100", "200", "300", "500", "1,000", "2,000", "4,000", "8,000", "16,000", "32,000", "64,000", "125,000", "250,000", "500,000", "1 MILLION"],
-        indexCounter: 0,
-        currentPrize: 0,
-        potentialPrize: "100",
-        lost: false,
-        winner: false,
-        currentAnswerCorrect: null,
-        phoneFriendMessage: "",
-        correctAnswerIndex: null,
-        displayingGraph: false 
-    }
-},
-components: {
-    'life-lines': LifeLines,
-    'money-list': MoneyList
-   
-  },
-props: ["questions", "name"],
-
-mounted() {
-     this.getCurrentAnswers(this.indexCounter)
-     this.getCurrentQuestion(this.indexCounter)  
-
-     eventBus.$on('get5050', () => {
-        this.get5050()
-        }) ,
-
-    eventBus.$on('phoneAFriend', () => {
-        this.phoneFriendMessage = "Your friend thinks the correct answer is " + this.currentAnswerCorrect
-    }),
-
-    eventBus.$on('askAudience', () => {
-        this.askAudience()
-        this.displayingGraph = true
-    })
-    
-},
-
-methods: {
-
-    getCurrentQuestion: function(index) {
-        this.currentQuestion = this.questions[index].question
-        console.log(this.currentQuestion)
+    name: 'gameplay',
+    data() {
+        return {
+            currentQuestion: null,
+            currentAnswers: [],
+            moneyList: ["100", "200", "300", "500", "1,000", "2,000", "4,000", "8,000", "16,000", "32,000", "64,000", "125,000", "250,000", "500,000", "1 MILLION"],
+            indexCounter: 0,
+            currentPrize: 0,
+            potentialPrize: "100",
+            lost: false,
+            winner: false,
+            currentAnswerCorrect: null,
+            phoneFriendMessage: "",
+            correctAnswerIndex: null,
+            displayingGraph: false 
+        }
     },
 
-    getCurrentAnswers: function(index) {
-        let answers = []
-        const answersWrong = this.questions[index].incorrect_answers // [answer, answer, ...]
-        answersWrong.forEach( incorrectAnswer => {
-                const fullAnswer = {answer: incorrectAnswer, correct: false, selected: false, inactive: false} // in here add selected key?
-                answers.push(fullAnswer)       
+    components: {
+        'life-lines': LifeLines,
+        'money-list': MoneyList
+    },
+
+    props: ["questions", "name"],
+
+    mounted() {
+        this.getCurrentAnswers(this.indexCounter)
+        this.getCurrentQuestion(this.indexCounter)  
+
+        eventBus.$on('get5050', () => {
+            this.get5050()
+            }) ,
+
+        eventBus.$on('phoneAFriend', () => {
+            this.phoneFriendMessage = "Your friend thinks the correct answer is " + this.currentAnswerCorrect
+        }),
+
+        eventBus.$on('askAudience', () => {
+            this.askAudience()
+            this.displayingGraph = true
         })
-        const answerCorrect =this.questions[index].correct_answer
-        this.currentAnswerCorrect = answerCorrect
-        answers.push({answer: answerCorrect, correct: true, right: false, selected: false, inactive: false})
-
-        let shuffledArray = shuffle(answers)
-        this.currentAnswers = shuffledArray
-    },
-
-    // handleClick function - on click select answer (change select to true) then do check answer function which has the timeout and does the green to the right answer
-    answerSelected: function(event, answer) {
-        answer.selected = true
-        setTimeout(() => {
-        for (const answer of this.currentAnswers) {
-            if (answer.correct === true) {
-                answer.right = true
-            }
-        }
-        }, 1000)
-    },
-    
-    checkAnswer: function(answer) {
-        setTimeout(() => {
-        if (answer.correct && this.indexCounter < 14) {
-            this.indexCounter ++;
-            this.getCurrentQuestion(this.indexCounter)
-            this.getCurrentAnswers(this.indexCounter)
-            this.currentPrize = this.moneyList[this.indexCounter - 1]
-            this.potentialPrize = this.moneyList[this.indexCounter]
-            this.phoneFriendMessage = ""
-            this.displayingGraph = false
-        }
-        else if (answer.correct && this.indexCounter === 14){
-            eventBus.$emit('winner')
-        }
-        else {
-            this.lost = true;
-            if (this.indexCounter < 4) {
-                this.currentPrize = 0
-            }
-            else if (this.indexCounter < 9){
-                this.currentPrize = "1,000"
-            }
-            else if (this.indexCounter < 14){
-                this.currentPrize = "32,000"
-            }  
-        }      
-          } 
-        , 2000)
-    },
-
         
+    },
+
+    methods: {
+        getCurrentQuestion: function(index) {
+            this.currentQuestion = this.questions[index].question
+            console.log(this.currentQuestion)
+        },
+
+        getCurrentAnswers: function(index) {
+            let answers = []
+            const answersWrong = this.questions[index].incorrect_answers // [answer, answer, ...]
+            answersWrong.forEach( incorrectAnswer => {
+                    const fullAnswer = {answer: incorrectAnswer, correct: false, selected: false, inactive: false} // in here add selected key?
+                    answers.push(fullAnswer)       
+            })
+            const answerCorrect =this.questions[index].correct_answer
+            this.currentAnswerCorrect = answerCorrect
+            answers.push({answer: answerCorrect, correct: true, right: false, selected: false, inactive: false})
+
+            let shuffledArray = shuffle(answers)
+            this.currentAnswers = shuffledArray
+        },
+
+        // handleClick function - on click select answer (change select to true) then do check answer function which has the timeout and does the green to the right answer
+        answerSelected: function(event, answer) {
+            answer.selected = true
+            setTimeout(() => {
+            for (const answer of this.currentAnswers) {
+                if (answer.correct === true) {
+                    answer.right = true
+                }
+              }
+            }, 1000)
+        },
+        
+        checkAnswer: function(answer) {
+            setTimeout(() => {
+            if (answer.correct && this.indexCounter < 14) {
+                this.indexCounter ++;
+                this.getCurrentQuestion(this.indexCounter)
+                this.getCurrentAnswers(this.indexCounter)
+                this.currentPrize = this.moneyList[this.indexCounter - 1]
+                this.potentialPrize = this.moneyList[this.indexCounter]
+                this.phoneFriendMessage = ""
+                this.displayingGraph = false
+            }
+
+            else if (answer.correct && this.indexCounter === 14){
+                eventBus.$emit('winner')
+            }
+
+            else {
+                this.lost = true;
+                if (this.indexCounter < 4) {
+                    this.currentPrize = 0
+                }
+                else if (this.indexCounter < 9){
+                    this.currentPrize = "1,000"
+                }
+                else if (this.indexCounter <= 14){
+                    this.currentPrize = "32,000"
+                }  
+              }      
+            } 
+            , 2000)
+        },
+
         restartGame: async function() {
-        eventBus.$emit('go-home')
+            eventBus.$emit('go-home')
+        },
 
-    },
+        takeMoney: function(){
+            eventBus.$emit('take-money', this.currentPrize);  
+        },
 
-    takeMoney: function(){
-        eventBus.$emit('take-money', this.currentPrize);
+        get5050: function() {
+            // const currentAnswersCopy = [...this.currentAnswers]
+            for (var i = 0; i<3; i++) {
+                // Create a clone of the this.currentAnswers Array
+                // if (this.currentAnswerCloneArray[i] ===false)
+                // then delete the item from the real array where the index matches
+                if (this.currentAnswers[i].correct === false){
+                    this.currentAnswers[i].inactive = true
+                }
+            } 
+        },
         
-    },
-
-    get5050: function() {
-        // const currentAnswersCopy = [...this.currentAnswers]
-        for (var i = 0; i<3; i++) {
-            // Create a clone of the this.currentAnswers Array
-            // if (this.currentAnswerCloneArray[i] ===false)
-            // then delete the item from the real array where the index matches
-            if (this.currentAnswers[i].correct === false){
-                this.currentAnswers[i].inactive = true
+        askAudience: function() {
+            for (const answer of this.currentAnswers) {
+                if (answer.correct === true)
+                this.correctAnswerIndex = this.currentAnswers.indexOf(answer)
             }
-        } 
-    },
-    askAudience: function() {
-        for (const answer of this.currentAnswers) {
-            if (answer.correct === true)
-            this.correctAnswerIndex = this.currentAnswers.indexOf(answer)
-        }
+          }
+        },
     }
-    },
-}
 
 </script>
 
