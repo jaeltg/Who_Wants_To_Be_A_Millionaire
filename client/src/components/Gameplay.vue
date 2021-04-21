@@ -11,8 +11,8 @@
           <img v-if="displayingGraph" :src="require(`../../../client/public/images/${correctAnswerIndex}.png`)" alt="">
           <h3>{{phoneFriendMessage}}</h3>
           <h2 v-html="currentQuestion">{{currentQuestion}}</h2>              
-          <ol>
-              <li v-for="(answer, index) in currentAnswers" :key="index" @click="checkAnswer(answer); answerSelected($event, answer)">
+          <ol id="answer-container">
+              <li id="answer" v-for="(answer, index) in currentAnswers" :key="index" @click="checkAnswer(answer); answerSelected($event, answer)">
                  <button v-html="answer.answer" :class="answer.selected ? 'selected' : 'not-selected'" :id="answer.right ? 'right' : 'wrong'" :disabled="answer.inactive">{{answer.answer}}</button>
              </li>
           </ol>
@@ -23,7 +23,7 @@
           <div>
               <h2>{{name}}, you are a disappointment!!</h2>
               <p>You leave with £{{currentPrize}}</p>
-            <button @click="restartGame" >Redeem yourself, loser!</button>
+            <button id="restart-game" @click="restartGame" >Redeem yourself, loser!</button>
           </div>
       </section>
   </div>
@@ -157,6 +157,8 @@ export default {
 <style scoped>
 ol {
 list-style-type: upper-alpha;
+list-style-position: inside;
+text-align: left;
 }
 
 #grid-container {
@@ -171,5 +173,24 @@ list-style-type: upper-alpha;
 #right {
     background-color: greenyellow;
 }
+
+#answer-container{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr
+}
+
+#answer {
+    border: white 2px double;
+    border-radius: 20px;
+}
+
+button {
+    background-color: transparent;
+    color: white;
+    border: none;
+}
+
+
 
 </style>

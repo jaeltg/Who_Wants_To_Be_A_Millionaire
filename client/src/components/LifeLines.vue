@@ -1,7 +1,7 @@
 <template>
     <div>
         <button @click="get5050()" v-if="fiftyFiftyActive" id="5050">
-            <img src="images/Classic5050.png" alt="50:50">
+            <img src="../../public/images/Classic5050.png" alt="50:50">
         </button>
         <button @click="phoneAFriend()" v-if="phoneAFriendActive" id="phone-friend">
             <img src="images/call.png" alt="Phone a Friend">
