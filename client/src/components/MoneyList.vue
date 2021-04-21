@@ -1,12 +1,12 @@
 <template>
   <div>
-       <ul v-for="(money, index) in moneyList.slice().reverse()" :key="index" id="money-list">
-          <li v-if="potentialPrize === money" class="highlight">
-              £{{money}}
+       <ol reversed id="money-list">
+          <li v-for="(money, index) in moneyList.slice().reverse()" :key="index" v-if="potentialPrize === money" class="highlight">
+              <p>£{{money}}</p>
               </li>
-             <li v-else class="normal"> <p>£{{money}}</p>
+             <li v-else class="normal"> <p class="money">£{{money}}</p>
           </li>
-      </ul>
+      </ol>
   </div>
 </template>
 
@@ -18,10 +18,36 @@ export default {
 </script>
 
 <style scoped>
-#moneyList > li > p {
-    font-family: Copperplate,
+ol {
+   font-family: Copperplate;
+   margin-left: 20px;
+   color: orange;
+   font-size: 20px;
+   font-weight: bold;
+   
 }
+.money {
+    font-family: Copperplate;
+    font-size: 20px;
+    text-align: left;
+    margin-left: 10px;
+}
+
+li:nth-child(6) {
+    color: whitesmoke
+}
+li:nth-child(1) {
+    color: whitesmoke
+}
+li:nth-child(11) {
+    color: whitesmoke
+}
+
 .highlight {
     background-color: orange;
+    color: darkblue;
+    font-family: Copperplate;
+    font-size: 20px;
+    text-align: left;
 }
 </style>
