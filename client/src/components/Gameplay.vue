@@ -87,17 +87,15 @@ export default {
 
         getCurrentAnswers: function(index) {
             let answers = []
-            const answersWrong = this.questions[index].incorrect_answers // [answer, answer, ...]
-            answersWrong.forEach( incorrectAnswer => {
-                    const fullAnswer = {answer: incorrectAnswer, correct: false, selected: false, inactive: false} // in here add selected key?
-                    answers.push(fullAnswer)       
+            const answersWrong = this.questions[index].incorrect_answers
+            answers = answersWrong.map( incorrectAnswer => {
+                    return {answer: incorrectAnswer, correct: false, selected: false, inactive: false}     
             })
             const answerCorrect =this.questions[index].correct_answer
             this.currentAnswerCorrect = answerCorrect
             answers.push({answer: answerCorrect, correct: true, right: false, selected: false, inactive: false})
 
-            let shuffledArray = shuffle(answers)
-            this.currentAnswers = shuffledArray
+            this.currentAnswers = shuffle(answers)
         },
 
         // handleClick function - on click select answer (change select to true) then do check answer function which has the timeout and does the green to the right answer
@@ -163,7 +161,7 @@ export default {
                 }
             } 
         },
-        
+
         askAudience: function() {
             for (const answer of this.currentAnswers) {
                 if (answer.correct === true)

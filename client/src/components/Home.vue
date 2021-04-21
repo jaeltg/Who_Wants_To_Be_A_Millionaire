@@ -2,12 +2,11 @@
 <div id="home-component">
     <h2>Welcome!</h2>
     <form @submit.prevent="handleClick">
-    <label for="name">Please enter your name</label> 
-    <br>     
-    <input id="name" type="text" v-model="name">
-    <br>
-    <input type="submit" value="Start Game" id="submit">
-    <!-- <button @click="handleClick">Start Game</button> -->
+        <label for="name">Please enter your name</label> 
+        <br>     
+        <input id="name" type="text" v-model="name">
+        <br>
+        <input type="submit" value="Start Game" id="submit">
     </form>
   </div>
 </template>
