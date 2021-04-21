@@ -1,10 +1,10 @@
 <template>
   <div>
-      <h2>{{name}}, you took your money! You leave with £{{ takeawayPrize }}</h2>
-      <audio autoplay volume="0.2">
+      <h2>{{name}}, you chickened out! You leave with £{{ takeawayPrize }}</h2>
+       <audio autoplay volume="0.2">
         <source src="../../public/sounds/chicken.mp3" />
         </audio>
-      <button @click="goHome()">Start Again</button>
+      <button @click="goHome()">Stop Yolking Around!</button>
   </div>
 </template>
 
@@ -18,8 +18,7 @@ export default {
         goHome: function() {
             eventBus.$emit('go-home')
     }
-
-}
+  }
 }
 </script>
 

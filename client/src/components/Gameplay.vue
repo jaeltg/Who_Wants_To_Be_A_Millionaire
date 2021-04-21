@@ -40,6 +40,7 @@
 <script>
 import LifeLines from '../components/LifeLines.vue'
 import MoneyList from '../components/MoneyList.vue'
+import MillionerService from '../../services/MillionerService.js'
 import {shuffle} from 'lodash';
 import { eventBus } from '@/main.js'
 
@@ -49,7 +50,7 @@ export default {
         return {
             currentQuestion: null,
             currentAnswers: [],
-            moneyList: ["100", "200", "300", "500", "1,000", "2,000", "4,000", "8,000", "16,000", "32,000", "64,000", "125,000", "250,000", "500,000", "1 MILLION"],
+            moneyList: ["100", "200", "300", "500", "1,000", "2,000", "4,000", "8,000", "16,000", "32,000", "64,000", "125,000", "250,000", "500,000", "1,000,000"],
             indexCounter: 0,
             currentPrize: 0,
             potentialPrize: "100",
@@ -58,7 +59,8 @@ export default {
             currentAnswerCorrect: null,
             phoneFriendMessage: "",
             correctAnswerIndex: null,
-            displayingGraph: false 
+            displayingGraph: false
+            
         }
     },
 
@@ -133,6 +135,11 @@ export default {
             }
 
             else if (answer.correct && this.indexCounter === 14){
+                const score = {
+                        name: this.name,
+                        score: 10000000
+                    }
+                MillionerService.addScore(score)
                 eventBus.$emit('winner')
             }
 
@@ -140,12 +147,30 @@ export default {
                 this.lost = true;
                 if (this.indexCounter < 4) {
                     this.currentPrize = 0
+                    const score = {
+                        name: this.name,
+                        score: 0
+                    }
+                    MillionerService.addScore(score)
                 }
                 else if (this.indexCounter < 9){
-                    this.currentPrize = "1,000"
-                }
+                    this.currentPrize = 1000
+                    const score = {
+                        name: this.name,
+                        score: 1000
+                    }
+                    MillionerService.addScore(score)
+             
+                                    }
                 else if (this.indexCounter <= 14){
-                    this.currentPrize = "32,000"
+                    this.currentPrize = 32000
+                    const score = {
+                        name: this.name,
+                        score: 32000
+                    }
+                    MillionerService.addScore(score)
+                    
+                    
                 }  
               }      
             } 
@@ -157,7 +182,12 @@ export default {
         },
 
         takeMoney: function(){
-            eventBus.$emit('take-money', this.currentPrize);  
+            const score = {
+                name: this.name,
+                score: this.currentPrize.replace(",","")
+            }
+            MillionerService.addScore(score)
+            .then(eventBus.$emit('take-money', this.currentPrize));  
         }
       }
     }
@@ -176,12 +206,22 @@ text-align: left;
 }
 
 .selected {
-    background-color: orange;
-    color: darkblue;
+    background-color: orange; 
+    color: darkblue 
+}
+.selected ::marker {
+    color:darkblue
+}
+.selected > button {
+    color:darkblue;
 }
 
 #right {
     background-color: greenyellow;
+}
+
+#right > button {
+    color:darkblue;
 }
 
 #answer-container{
