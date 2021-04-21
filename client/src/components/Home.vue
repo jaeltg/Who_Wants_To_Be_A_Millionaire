@@ -1,6 +1,9 @@
 <template>
 <div id="home-component">
     <h2>Welcome!</h2>
+    <audio controls volume= "0.5" autoplay>
+  <source src="../../public/sounds/main_theme.mp3" />
+</audio>
     <form @submit.prevent="handleClick">
         <label for="name">Please enter your name</label> 
         <br>     
@@ -30,16 +33,32 @@ export default {
     }
 }
 </script>
-
 <style scoped>
+h2 {
+    font-family: Copperplate;
+    font-size: 50px;
+    margin-bottom: 10px;
+}    
+label {
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+#name {
+      
+    margin-top: 15px;
+    font-family: Avenir;
+}
+
 #home-component {
     text-align: center
 }
 #submit {
-    display: block;
-    padding: 20px;
-    margin-right: auto;
-    margin-left: auto;
-    margin-top:20px
+    background-color: orange;
+    padding: 10px;
+    font-weight: bold;
+    color: darkblue;
+    font-size: 30px;
+    font-family: Copperplate;
+    margin-top: 80px;
 }
 </style>

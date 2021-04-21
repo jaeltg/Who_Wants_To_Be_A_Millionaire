@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="lifeline-container">
         <button @click="get5050()" v-if="fiftyFiftyActive" id="5050">
             <img src="../../public/images/Classic5050.png" alt="50:50">
         </button>
@@ -60,5 +60,18 @@ export default {
 </script>
 
 <style scoped>
+button {
+    background-color: transparent;
+    border: none;
+}
+img {
+    height: 40px;
+    width: 80px;
+}
+
+#lifeline-container{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
 
 </style>

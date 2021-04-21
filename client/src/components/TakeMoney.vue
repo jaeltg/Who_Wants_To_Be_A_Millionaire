@@ -1,6 +1,6 @@
 <template>
   <div>
-      <h3>{{name}}, you took your money! You leave with £{{ takeawayPrize }}</h3>
+      <h2>{{name}}, you took your money! You leave with £{{ takeawayPrize }}</h2>
       <button @click="goHome()">Start Again</button>
   </div>
 </template>
@@ -20,6 +20,16 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+button {
+    background-color: orange;
+    padding: 10px;
+    border-radius: 10px;
+    font-weight: bold;
+    color: darkblue;
+    font-family: Copperplate;
+    font-size: 25px;
+    margin-top: 30px;
+}
 
 </style>
