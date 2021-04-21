@@ -1,6 +1,9 @@
 <template>
   <div>
       <h2>{{name}}, you took your money! You leave with £{{ takeawayPrize }}</h2>
+      <audio autoplay volume="0.2">
+        <source src="../../public/sounds/chicken.mp3" />
+        </audio>
       <button @click="goHome()">Start Again</button>
   </div>
 </template>
