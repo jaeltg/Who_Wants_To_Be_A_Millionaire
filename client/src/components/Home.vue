@@ -8,18 +8,29 @@
         <br>
         <input type="submit" value="Start Game" id="submit">
     </form>
+    <h3>TOP SCORES</h3>
+    <ul>
+        <li v-for="(score, index) in scoresList" :key="index">{{score.name}} won £{{score.score}}</li>
+    </ul>
   </div>
 </template>
 
 <script>
+import MillionerService from '../../services/MillionerService.js'
 import { eventBus } from '@/main.js'
 
 export default {
     name: "home",
     data() {
         return {
-            name: ""
+            name: "",
+            scoresList: []
         }
+    },
+    mounted(){
+        MillionerService.getScores()
+        .then((scores) =>  scores.sort((a,b) => parseFloat(b.score) - parseFloat(a.score)))        
+        .then((sortedScores) => (this.scoresList = sortedScores))
     },
     methods: {
         handleClick: function() {

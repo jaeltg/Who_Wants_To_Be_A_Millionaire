@@ -32,6 +32,7 @@
 <script>
 import LifeLines from '../components/LifeLines.vue'
 import MoneyList from '../components/MoneyList.vue'
+import MillionerService from '../../services/MillionerService.js'
 import {shuffle} from 'lodash';
 import { eventBus } from '@/main.js'
 
@@ -41,7 +42,7 @@ export default {
         return {
             currentQuestion: null,
             currentAnswers: [],
-            moneyList: ["100", "200", "300", "500", "1,000", "2,000", "4,000", "8,000", "16,000", "32,000", "64,000", "125,000", "250,000", "500,000", "1 MILLION"],
+            moneyList: [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000, 64000, 125000, 250000, 500000, 1000000],
             indexCounter: 0,
             currentPrize: 0,
             potentialPrize: "100",
@@ -50,7 +51,8 @@ export default {
             currentAnswerCorrect: null,
             phoneFriendMessage: "",
             correctAnswerIndex: null,
-            displayingGraph: false 
+            displayingGraph: false
+            
         }
     },
 
@@ -133,10 +135,13 @@ export default {
                     this.currentPrize = 0
                 }
                 else if (this.indexCounter < 9){
-                    this.currentPrize = "1,000"
-                }
+                    this.currentPrize = 1000
+             
+                                    }
                 else if (this.indexCounter <= 14){
-                    this.currentPrize = "32,000"
+                    this.currentPrize = 32000
+                    
+                    
                 }  
               }      
             } 
@@ -148,7 +153,12 @@ export default {
         },
 
         takeMoney: function(){
-            eventBus.$emit('take-money', this.currentPrize);  
+            const score = {
+                name: this.name,
+                score: this.currentPrize
+            }
+            MillionerService.addScore(score)
+            .then(eventBus.$emit('take-money', this.currentPrize));  
         }
       }
     }
