@@ -69,12 +69,12 @@ export default {
             this.get5050()
             }) ,
 
-        eventBus.$on('phoneAFriend', () => {
-            this.phoneFriendMessage = "Your friend thinks the correct answer is " + this.currentAnswerCorrect
+        eventBus.$on('phoneAFriend', (payload) => {
+            this.phoneFriendMessage = payload + this.currentAnswerCorrect
         }),
 
-        eventBus.$on('askAudience', () => {
-            this.askAudience()
+        eventBus.$on('askAudience', (payload) => {
+            this.correctAnswerIndex = payload
             this.displayingGraph = true
         })
         
