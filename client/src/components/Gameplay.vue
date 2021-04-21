@@ -126,6 +126,11 @@ export default {
             }
 
             else if (answer.correct && this.indexCounter === 14){
+                const score = {
+                        name: this.name,
+                        score: 10000000
+                    }
+                MillionerService.addScore(score)
                 eventBus.$emit('winner')
             }
 
@@ -133,13 +138,28 @@ export default {
                 this.lost = true;
                 if (this.indexCounter < 4) {
                     this.currentPrize = 0
+                    const score = {
+                        name: this.name,
+                        score: 0
+                    }
+                    MillionerService.addScore(score)
                 }
                 else if (this.indexCounter < 9){
                     this.currentPrize = 1000
+                    const score = {
+                        name: this.name,
+                        score: 1000
+                    }
+                    MillionerService.addScore(score)
              
                                     }
                 else if (this.indexCounter <= 14){
                     this.currentPrize = 32000
+                    const score = {
+                        name: this.name,
+                        score: 32000
+                    }
+                    MillionerService.addScore(score)
                     
                     
                 }  
