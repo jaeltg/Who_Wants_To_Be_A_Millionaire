@@ -2,7 +2,7 @@
     
   <div id="grid-container">
       <div>
-          <life-lines />
+          <life-lines :currentAnswers="currentAnswers" :correctAnswerIndex="correctAnswerIndex" :phoneFriendMessage="phoneFriendMessage"/>
       <ul v-for="(money, index) in moneyList.slice().reverse()" :key="index" id="money-list">
           <li v-if="potentialPrize === money" class="highlight">
               £{{money}}
@@ -75,16 +75,12 @@ mounted() {
      this.getCurrentQuestion(this.indexCounter)
     //  this.addKeysToMoneyList()   
 
-     eventBus.$on('get5050', () => {
-        this.get5050()
-        }) ,
-
-    eventBus.$on('phoneAFriend', () => {
-        this.phoneFriendMessage = "Your friend thinks the correct answer is " + this.currentAnswerCorrect
+    eventBus.$on('phoneAFriend', (payload) => {
+        this.phoneFriendMessage = payload + this.currentAnswerCorrect
     }),
 
-    eventBus.$on('askAudience', () => {
-        this.askAudience()
+    eventBus.$on('askAudience', (payload) => {
+        this.correctAnswerIndex = payload
         this.displayingGraph = true
     })
     
@@ -104,7 +100,7 @@ methods: {
                 const fullAnswer = {answer: incorrectAnswer, correct: false, selected: false, inactive: false} // in here add selected key?
                 answers.push(fullAnswer)       
         })
-        const answerCorrect =this.questions[index].correct_answer
+        const answerCorrect = this.questions[index].correct_answer
         this.currentAnswerCorrect = answerCorrect
         answers.push({answer: answerCorrect, correct: true, right: false, selected: false, inactive: false})
 
@@ -181,25 +177,7 @@ methods: {
         
     },
 
-    get5050: function() {
-        // const currentAnswersCopy = [...this.currentAnswers]
-        for (var i = 0; i<3; i++) {
-            // Create a clone of the this.currentAnswers Array
-            // if (this.currentAnswerCloneArray[i] ===false)
-            // then delete the item from the real array where the index matches
-            if (this.currentAnswers[i].correct === false){
-                this.currentAnswers[i].inactive = true
-            }
-        } 
-    },
-    askAudience: function() {
-        for (const answer of this.currentAnswers) {
-            if (answer.correct === true)
-            this.correctAnswerIndex = this.currentAnswers.indexOf(answer)
-        }
-
-
-    }
+   
 
     },
     
