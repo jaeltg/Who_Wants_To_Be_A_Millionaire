@@ -18,6 +18,9 @@ export default {
 </script>
 
 <style scoped>
+#moneyList > li > p {
+    font-family: Copperplate,
+}
 .highlight {
     background-color: orange;
 }

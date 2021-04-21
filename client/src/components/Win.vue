@@ -1,8 +1,11 @@
 <template>
 <div id="win-component">
-<h1>{{name}}, you are a MILLIONAIRE!</h1>
-<button @click="getPrize">Claim your Prize!</button>
-<button @click="newGame">Back to Main Page</button>
+<h1>{{name}}</h1> 
+<h1> MILLIONAIRE</h1>
+
+
+<button @click="getPrize">Claim your prize and run!</button>
+<button @click="newGame">Prove that you didn't cheat by playing again...</button>
 </div>
 </template>
 
@@ -26,6 +29,7 @@ methods: {
 <style scoped>
 #win-component{
     background-image: url('../../../client/public/images/raining-money.gif');
+
 }
 
 
