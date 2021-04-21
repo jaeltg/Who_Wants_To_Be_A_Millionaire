@@ -1,7 +1,7 @@
 <template>
 <div id="win-component">
 <h1>{{name}}, you are a MILLIONAIRE!</h1>
-<button@click="getPrize">Claim your Prize!</button>
+<button @click="getPrize">Claim your Prize!</button>
 <button @click="newGame">Back to Main Page</button>
 </div>
 </template>

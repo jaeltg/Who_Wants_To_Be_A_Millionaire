@@ -1,6 +1,8 @@
 <template>
+    
   <div id="grid-container">
       <div>
+          <life-lines />
       <ul v-for="(money, index) in moneyList.slice().reverse()" :key="index" id="money-list">
           <li v-if="potentialPrize === money" class="highlight">
               £{{money}}
@@ -11,12 +13,16 @@
       </div>
       <section v-if="!lost">
       <div>
+          <img v-if="displayingGraph" :src="require(`../../../client/public/images/${correctAnswerIndex}.png`)" alt="">
+          <h3>{{phoneFriendMessage}}</h3>
           <h2 v-html="currentQuestion">{{currentQuestion}}</h2>
-          <ul v-for="(answer, index) in currentAnswers" :key="index">
-              <li @click="checkAnswer(answer)">
-                 <button v-html="answer.answer">{{answer.answer}}</button>
+        
+              
+          <ol>
+              <li v-for="(answer, index) in currentAnswers" :key="index" @click="checkAnswer(answer); answerSelected($event, answer)">
+                 <button v-html="answer.answer" :class="answer.selected ? 'selected' : 'not-selected'" :id="answer.right ? 'right' : 'wrong'" :disabled="answer.inactive">{{answer.answer}}</button>
              </li>
-          </ul>
+          </ol>
           <button v-if="indexCounter>0" @click="takeMoney()">Take my Money!</button>
       </div>
       </section>
@@ -27,10 +33,12 @@
             <button @click="restartGame" >Redeem yourself, loser!</button>
           </div>
       </section>
+      
   </div>
 </template>
 
 <script>
+import LifeLines from '../components/LifeLines.vue'
 import {shuffle} from 'lodash';
 import { eventBus } from '@/main.js'
 
@@ -46,17 +54,39 @@ data() {
         potentialPrize: "100",
         lost: false,
         winner: false,
-        moneyWithKeys: [],
+        // moneyWithKeys: [],
+        currentAnswerCorrect: null,
+        phoneFriendMessage: "",
+        AddClassIfCorrect: false,
+        correctAnswerIndex: null,
+        displayingGraph: false
        
        
     }
 },
+components: {
+    'life-lines': LifeLines
+   
+  },
 props: ["questions", "name"],
 
 mounted() {
      this.getCurrentAnswers(this.indexCounter)
      this.getCurrentQuestion(this.indexCounter)
-     this.addKeysToMoneyList()   
+    //  this.addKeysToMoneyList()   
+
+     eventBus.$on('get5050', () => {
+        this.get5050()
+        }) ,
+
+    eventBus.$on('phoneAFriend', () => {
+        this.phoneFriendMessage = "Your friend thinks the correct answer is " + this.currentAnswerCorrect
+    }),
+
+    eventBus.$on('askAudience', () => {
+        this.askAudience()
+        this.displayingGraph = true
+    })
     
 },
 
@@ -71,23 +101,39 @@ methods: {
         let answers = []
         const answersWrong = this.questions[index].incorrect_answers // [answer, answer, ...]
         answersWrong.forEach( incorrectAnswer => {
-                const fullAnswer = {answer: incorrectAnswer, correct: false}
+                const fullAnswer = {answer: incorrectAnswer, correct: false, selected: false, inactive: false} // in here add selected key?
                 answers.push(fullAnswer)       
         })
         const answerCorrect =this.questions[index].correct_answer
-        answers.push({answer: answerCorrect, correct: true})
+        this.currentAnswerCorrect = answerCorrect
+        answers.push({answer: answerCorrect, correct: true, right: false, selected: false, inactive: false})
 
         let shuffledArray = shuffle(answers)
         this.currentAnswers = shuffledArray
     },
 
+    // handleClick function - on click select answer (change select to true) then do check answer function which has the timeout and does the green to the right answer
+    answerSelected: function(event, answer) {
+        answer.selected = true
+        setTimeout(() => {
+        for (const answer of this.currentAnswers) {
+            if (answer.correct === true) {
+                answer.right = true
+            }
+        }
+        }, 1000)
+    },
+    
     checkAnswer: function(answer) {
+        setTimeout(() => {
         if (answer.correct && this.indexCounter < 14) {
             this.indexCounter ++;
             this.getCurrentQuestion(this.indexCounter)
             this.getCurrentAnswers(this.indexCounter)
             this.currentPrize = this.moneyList[this.indexCounter - 1]
             this.potentialPrize = this.moneyList[this.indexCounter]
+            this.phoneFriendMessage = ""
+            this.displayingGraph = false
         }
         else if (answer.correct && this.indexCounter === 14){
             eventBus.$emit('winner')
@@ -102,21 +148,23 @@ methods: {
             }
             else if (this.indexCounter < 14){
                 this.currentPrize = "32,000"
-            }        
+            }  
+        }      
           } 
-        },
+        , 2000)
+    },
 
-        addKeysToMoneyList: function() {
-            this.moneyList.forEach((money) => {
-                const prizeWithKeys = {quantity: money, basePrize: false}
-                this.moneyWithKeys.push(prizeWithKeys)
-            })
-            this.moneyWithKeys.forEach((money) => {
-                if (money.quantity === "1,000" || money.quantity === "32,000" || money.quantity === "1 MILLION") {
-                    money.basePrize = true
-                }
-            })
-        },
+        // addKeysToMoneyList: function() {
+        //     this.moneyList.forEach((money) => {
+        //         const prizeWithKeys = {quantity: money, basePrize: false}
+        //         this.moneyWithKeys.push(prizeWithKeys)
+        //     })
+        //     this.moneyWithKeys.forEach((money) => {
+        //         if (money.quantity === "1,000" || money.quantity === "32,000" || money.quantity === "1 MILLION") {
+        //             money.basePrize = true
+        //         }
+        //     })
+        // },
         
         restartGame: async function() {
         eventBus.$emit('go-home')
@@ -129,10 +177,30 @@ methods: {
     },
 
     takeMoney: function(){
-        console.log("TAKING MONEY!!!!!!!!!!!!");
         eventBus.$emit('take-money', this.currentPrize);
         
+    },
+
+    get5050: function() {
+        // const currentAnswersCopy = [...this.currentAnswers]
+        for (var i = 0; i<3; i++) {
+            // Create a clone of the this.currentAnswers Array
+            // if (this.currentAnswerCloneArray[i] ===false)
+            // then delete the item from the real array where the index matches
+            if (this.currentAnswers[i].correct === false){
+                this.currentAnswers[i].inactive = true
+            }
+        } 
+    },
+    askAudience: function() {
+        for (const answer of this.currentAnswers) {
+            if (answer.correct === true)
+            this.correctAnswerIndex = this.currentAnswers.indexOf(answer)
+        }
+
+
     }
+
     },
     
     
@@ -141,8 +209,8 @@ methods: {
 </script>
 
 <style scoped>
-ul {
-list-style: none;
+ol {
+list-style-type: upper-alpha;
 }
 
 #grid-container {
@@ -151,6 +219,24 @@ list-style: none;
 }
 
 .highlight {
-    background-color: hotpink
+    background-color: orange;
 }
+
+/* #button {
+    background-color: none;
+    transition: ease-in-out, background-color 1s ease-in-out;
+}
+#button:focus{
+    background-color: orange;  
+} */
+
+.selected {
+    background-color: orange
+}
+
+#right {
+    background-color: greenyellow;
+    /* padding: 20px; */
+}
+
 </style>
