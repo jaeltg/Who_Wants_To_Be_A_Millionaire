@@ -2,9 +2,10 @@
     
   <div id="grid-container">
       <div>
-          <life-lines />
+          <life-lines :currentAnswers="currentAnswers" :correctAnswerIndex="correctAnswerIndex" :phoneFriendMessage="phoneFriendMessage"/>
           <money-list :moneyList="moneyList" :potentialPrize="potentialPrize"/>
      </div>
+          
       <section v-if="!lost">
       <div>
           <img v-if="displayingGraph" :src="require(`../../../client/public/images/${correctAnswerIndex}.png`)" alt="">
@@ -148,29 +149,9 @@ export default {
 
         takeMoney: function(){
             eventBus.$emit('take-money', this.currentPrize);  
-        },
-
-        get5050: function() {
-            // const currentAnswersCopy = [...this.currentAnswers]
-            for (var i = 0; i<3; i++) {
-                // Create a clone of the this.currentAnswers Array
-                // if (this.currentAnswerCloneArray[i] ===false)
-                // then delete the item from the real array where the index matches
-                if (this.currentAnswers[i].correct === false){
-                    this.currentAnswers[i].inactive = true
-                }
-            } 
-        },
-
-        askAudience: function() {
-            for (const answer of this.currentAnswers) {
-                if (answer.correct === true)
-                this.correctAnswerIndex = this.currentAnswers.indexOf(answer)
-            }
-          }
-        },
+        }
+      }
     }
-
 </script>
 
 <style scoped>

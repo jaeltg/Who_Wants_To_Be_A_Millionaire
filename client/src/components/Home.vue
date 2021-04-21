@@ -4,7 +4,7 @@
     <form @submit.prevent="handleClick">
         <label for="name">Please enter your name</label> 
         <br>     
-        <input id="name" type="text" v-model="name">
+        <input id="name" type="text" v-model="name" required>
         <br>
         <input type="submit" value="Start Game" id="submit">
     </form>
@@ -28,7 +28,6 @@ export default {
             eventBus.$emit('name', this.name)
         }
     }
-
 }
 </script>
 

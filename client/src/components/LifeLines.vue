@@ -18,27 +18,43 @@ import { eventBus } from '@/main.js'
 
 export default {
     name: "life-lines",
+    props: ["currentAnswers", "correctAnswerIndex", "phoneFriendMessage"],
     data() {
         return {
             fiftyFiftyActive: true,
             phoneAFriendActive: true,
-            askAudienceActive: true
+            askAudienceActive: true,
+            rightAnswerIndex: null
         }
     },
     methods: {
-        get5050: function() {
-            eventBus.$emit('get5050');
-            this.fiftyFiftyActive = false
-        },
         phoneAFriend: function() {
-            eventBus.$emit('phoneAFriend');
+            const message = "Zsolt is not sure ... but thinks it could be ... "
+            eventBus.$emit("phoneAFriend", message)
             this.phoneAFriendActive = false
         },
+        
+         get5050: function() {
+            for (var i = 0; i<3; i++) {
+                if (this.currentAnswers[i].correct === false){
+                    this.currentAnswers[i].inactive = true
+                }
+                this.fiftyFiftyActive = false
+                // eventBus.$emit('get5050');
+            } 
+            },
+
         askAudience: function() {
-            eventBus.$emit('askAudience');
+            for (const answer of this.currentAnswers) {
+                if (answer.correct === true)
+                // this.correctAnswerIndex = this.currentAnswers.indexOf(answer)
+                this.rightAnswerIndex = this.currentAnswers.indexOf(answer)
+                eventBus.$emit("askAudience", this.rightAnswerIndex)
+            }
             this.askAudienceActive = false;
+            // eventBus.$emit('askAudience');
         }
-    }
+        }
 
 }
 </script>
