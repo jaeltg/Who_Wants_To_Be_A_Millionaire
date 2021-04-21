@@ -1,8 +1,14 @@
 <template>
     <div>
-        <button @click="get5050()" v-if="fiftyFiftyActive" >50 : 50</button>
-        <button @click="phoneAFriend()" v-if="phoneAFriendActive">Phone a friend</button>
-        <button @click="askAudience()" v-if="askAudienceActive">Ask the audience</button>
+        <button @click="get5050()" v-if="fiftyFiftyActive" id="5050">
+            <img src="images/Classic5050.png" alt="50:50">
+        </button>
+        <button @click="phoneAFriend()" v-if="phoneAFriendActive" id="phone-friend">
+            <img src="images/call.png" alt="Phone a Friend">
+        </button>
+        <button @click="askAudience()" v-if="askAudienceActive" id="audience">
+            <img src="images/Audience.png" alt="Ask the Audience">
+        </button>
     </div>
   
 </template>
@@ -37,6 +43,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+
 
 </style>

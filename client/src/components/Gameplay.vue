@@ -3,21 +3,13 @@
   <div id="grid-container">
       <div>
           <life-lines />
-      <ul v-for="(money, index) in moneyList.slice().reverse()" :key="index" id="money-list">
-          <li v-if="potentialPrize === money" class="highlight">
-              £{{money}}
-              </li>
-             <li v-else class="normal"> <p>£{{money}}</p>
-          </li>
-      </ul>
-      </div>
+          <money-list :moneyList="moneyList" :potentialPrize="potentialPrize"/>
+     </div>
       <section v-if="!lost">
       <div>
           <img v-if="displayingGraph" :src="require(`../../../client/public/images/${correctAnswerIndex}.png`)" alt="">
           <h3>{{phoneFriendMessage}}</h3>
-          <h2 v-html="currentQuestion">{{currentQuestion}}</h2>
-        
-              
+          <h2 v-html="currentQuestion">{{currentQuestion}}</h2>              
           <ol>
               <li v-for="(answer, index) in currentAnswers" :key="index" @click="checkAnswer(answer); answerSelected($event, answer)">
                  <button v-html="answer.answer" :class="answer.selected ? 'selected' : 'not-selected'" :id="answer.right ? 'right' : 'wrong'" :disabled="answer.inactive">{{answer.answer}}</button>
@@ -33,12 +25,12 @@
             <button @click="restartGame" >Redeem yourself, loser!</button>
           </div>
       </section>
-      
   </div>
 </template>
 
 <script>
 import LifeLines from '../components/LifeLines.vue'
+import MoneyList from '../components/MoneyList.vue'
 import {shuffle} from 'lodash';
 import { eventBus } from '@/main.js'
 
@@ -54,26 +46,22 @@ data() {
         potentialPrize: "100",
         lost: false,
         winner: false,
-        // moneyWithKeys: [],
         currentAnswerCorrect: null,
         phoneFriendMessage: "",
-        AddClassIfCorrect: false,
         correctAnswerIndex: null,
-        displayingGraph: false
-       
-       
+        displayingGraph: false 
     }
 },
 components: {
-    'life-lines': LifeLines
+    'life-lines': LifeLines,
+    'money-list': MoneyList
    
   },
 props: ["questions", "name"],
 
 mounted() {
      this.getCurrentAnswers(this.indexCounter)
-     this.getCurrentQuestion(this.indexCounter)
-    //  this.addKeysToMoneyList()   
+     this.getCurrentQuestion(this.indexCounter)  
 
      eventBus.$on('get5050', () => {
         this.get5050()
@@ -154,26 +142,10 @@ methods: {
         , 2000)
     },
 
-        // addKeysToMoneyList: function() {
-        //     this.moneyList.forEach((money) => {
-        //         const prizeWithKeys = {quantity: money, basePrize: false}
-        //         this.moneyWithKeys.push(prizeWithKeys)
-        //     })
-        //     this.moneyWithKeys.forEach((money) => {
-        //         if (money.quantity === "1,000" || money.quantity === "32,000" || money.quantity === "1 MILLION") {
-        //             money.basePrize = true
-        //         }
-        //     })
-        // },
         
         restartGame: async function() {
         eventBus.$emit('go-home')
-        // eventBus.$emit('restart-gameplay')
-        // await this.getCurrentQuestion(this.indexCounter)
-        // await this.getCurrentAnswers(this.indexCounter)
-        // this.lost = false
-        // this.indexCounter = 0
-        // this.currentPrize = 0
+
     },
 
     takeMoney: function(){
@@ -197,13 +169,8 @@ methods: {
             if (answer.correct === true)
             this.correctAnswerIndex = this.currentAnswers.indexOf(answer)
         }
-
-
     }
-
     },
-    
-    
 }
 
 </script>
@@ -218,25 +185,12 @@ list-style-type: upper-alpha;
     grid-template-columns: 1fr 3fr;
 }
 
-.highlight {
-    background-color: orange;
-}
-
-/* #button {
-    background-color: none;
-    transition: ease-in-out, background-color 1s ease-in-out;
-}
-#button:focus{
-    background-color: orange;  
-} */
-
 .selected {
     background-color: orange
 }
 
 #right {
     background-color: greenyellow;
-    /* padding: 20px; */
 }
 
 </style>
