@@ -1,13 +1,12 @@
 <template>
 <div id="home-component">
     <h2>Welcome!</h2>
-    <form @submit="handleClick" method="post">
-    <label for="name">Please enter your name</label> 
-    <br>     
-    <input id="name" type="text" v-model="name" required>
-    <br>
-    <input type="submit" value="Start Game" id="submit">
-    <!-- <button @click="handleClick">Start Game</button> -->
+    <form @submit.prevent="handleClick">
+        <label for="name">Please enter your name</label> 
+        <br>     
+        <input id="name" type="text" v-model="name" required>
+        <br>
+        <input type="submit" value="Start Game" id="submit">
     </form>
   </div>
 </template>
@@ -23,14 +22,12 @@ export default {
         }
     },
     methods: {
-        handleClick: function(e) {
-            e.preventDefault()
+        handleClick: function() {
             eventBus.$emit('start-gameplay');
             eventBus.$emit('reset-gameplay', "true");
             eventBus.$emit('name', this.name)
         }
     }
-
 }
 </script>
 
