@@ -206,12 +206,22 @@ text-align: left;
 }
 
 .selected {
-    background-color: orange;
-    color: darkblue;
+    background-color: orange; 
+    color: darkblue 
+}
+.selected ::marker {
+    color:darkblue
+}
+.selected > button {
+    color:darkblue;
 }
 
 #right {
     background-color: greenyellow;
+}
+
+#right > button {
+    color:darkblue;
 }
 
 #answer-container{
