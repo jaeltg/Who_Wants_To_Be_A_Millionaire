@@ -4,7 +4,7 @@
     <home v-if="gameView==='home'"/>
     <gameplay v-if="gameView==='gameplay'" :questions="questions" :name="name"/>
     <take-money v-if="gameView==='take-money'" :takeawayPrize="takeawayPrize" :name="name"/>
-    <win v-if="gameView==='win'" :name="name":/>
+    <win v-if="gameView==='win'" :name="name"/>
     <prize v-if="gameView==='prize'"/>
   </div>
 </template>
