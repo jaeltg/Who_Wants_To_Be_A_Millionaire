@@ -1,11 +1,11 @@
 <template>
   <div id="app">
     <img src="images/millioners-logo.png" alt="Who Wants to be a Millioner!" id="logo">
-    <home v-if="gameView==='home'"/>
-    <gameplay v-if="gameView==='gameplay'" :questions="questions" :name="name"/>
-    <take-money v-if="gameView==='take-money'" :takeawayPrize="takeawayPrize" :name="name"/>
-    <win v-if="gameView==='win'" :name="name"/>
-    <prize v-if="gameView==='prize'"/>
+    <home v-if="gameView ==='home'"/>
+    <gameplay v-if="gameView ==='gameplay'" :questions="questions" :name="name"/>
+    <take-money v-if="gameView ==='take-money'" :takeawayPrize="takeawayPrize" :name="name"/>
+    <win v-if="gameView ==='win'" :name="name"/>
+    <prize v-if="gameView ==='prize'"/>
   </div>
 </template>
 
@@ -15,6 +15,7 @@ import Home from './components/Home.vue'
 import TakeMoney from './components/TakeMoney.vue'
 import Win from './components/Win.vue'
 import Prize from './components/Prize.vue'
+import MillionerService from "@/services/MillionerService"
 import { eventBus } from '@/main.js'
 
 export default {
@@ -27,6 +28,7 @@ export default {
       name: null
     }
   },
+
   components: {
     'gameplay': Gameplay,
     'home': Home,
@@ -35,18 +37,18 @@ export default {
     'prize': Prize
    
   },
+
   mounted() {
     this.getAllQuestions()
     
     eventBus.$on('start-gameplay', () => {
         this.gameView = "gameplay"
-        }) 
+    }) 
         
     eventBus.$on('go-home', () => {
       this.takeawayPrize = 0
       this.gameView = "home"
       this.getAllQuestions()
-      
     })
 
     eventBus.$on('take-money', (prize) => {
@@ -57,33 +59,34 @@ export default {
     eventBus.$on('winner', () => {
       this.gameView = "win"
     })
+
     eventBus.$on('get-prize', () => {
       this.gameView = "prize"
     })
 
     eventBus.$on('name', (name) => {
       this.name = name
-    })  
+    })
+
     },
     
   methods: {
     getAllQuestions: async function() {
-        const responseEasy = await fetch('https://opentdb.com/api.php?amount=5&difficulty=easy&type=multiple')
-        const dataEasy = await responseEasy.json()
-        const questionsEasy = dataEasy.results
-
-        const responseMedium = await fetch('https://opentdb.com/api.php?amount=5&difficulty=medium&type=multiple')
-        const dataMedium = await responseMedium.json()
-        const questionsMedium = dataMedium.results
-
-        const responseHard = await fetch('https://opentdb.com/api.php?amount=5&difficulty=hard&type=multiple')
-        const dataHard = await responseHard.json()
-        const questionsHard = dataHard.results
-
-        this.questions = questionsEasy.concat(questionsMedium, questionsHard)
-        
+        const questionsEasy = await this.getQuestions('https://opentdb.com/api.php?amount=5&difficulty=easy&type=multiple')
+        const questionsMedium = await this.getQuestions('https://opentdb.com/api.php?amount=5&difficulty=medium&type=multiple')
+        const questionsHard = await this.getQuestions('https://opentdb.com/api.php?amount=5&difficulty=hard&type=multiple')
+  
+        this.questions = questionsEasy.concat(questionsMedium, questionsHard)  
     },
+
+    getQuestions: async function(APIurl) {
+      const response = await fetch(APIurl)
+      const data = await response.json()
+      return data.results
+    }
+
   }
+
 }
 </script>
 
@@ -92,6 +95,7 @@ body {
  background: rgb(9,9,121);
  background: linear-gradient(90deg, rgba(9,9,121,1) 0%, rgba(95,27,196,1) 50%, rgba(9,9,121,1) 100%);
 }
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -105,4 +109,5 @@ body {
   width:200px;
   height:200px;
 }
+
 </style>
