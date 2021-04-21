@@ -7,6 +7,7 @@
              <li v-else class="normal"> <p class="money">£{{money}}</p>
           </li>
       </ol>
+      
   </div>
 </template>
 
