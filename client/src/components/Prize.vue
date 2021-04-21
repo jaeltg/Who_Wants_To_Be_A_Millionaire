@@ -7,7 +7,8 @@
       </audio>
       </h1>
       <img v-if="zsolt===true" :src="require(`../../../client/public/images/zsoltfinger.gif`)" alt="">
-      <button v-if="zsolt===false" @click="playLudo">Place a nice game of Ludo</button>
+      <br>
+      <button v-if="zsolt===false" @click="playLudo">Play a nice game of Ludo</button>
       <button v-if="zsolt===true" @click="goHome">TRY AGAIN</button>
   </div>
   
@@ -35,6 +36,31 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+button {
+    background-color: orange;
+    padding: 5px;
+    border-radius: 10px;
+    font-weight: bold;
+    color: darkblue;
+    font-family: Copperplate;
+    font-size: 20px;
+    margin-top: 30px;
+}
 
+h1 {
+  margin-top: 40px;
+  margin-bottom: 0px;
+  font-size: 30px;
+  text-align: center;
+}
+
+img {
+  height: 501.271px;
+  width: 450px;
+}
+
+button:focus {
+    outline: 0px;
+}
 </style>

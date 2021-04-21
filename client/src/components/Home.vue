@@ -91,4 +91,8 @@ label {
 #scores-list > li {
     font-size: 20px;
 }
+
+#submit:focus {
+    outline: 0px;
+}
 </style>

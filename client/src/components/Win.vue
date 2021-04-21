@@ -85,4 +85,7 @@ button {
     margin-bottom: 20px
 }
 
+button:focus {
+    outline: 0px;
+}
 </style>

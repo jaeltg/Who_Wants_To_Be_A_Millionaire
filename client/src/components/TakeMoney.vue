@@ -37,4 +37,8 @@ button {
     margin-top: 30px;
 }
 
+button:focus {
+    outline: 0px;
+}
+
 </style>
