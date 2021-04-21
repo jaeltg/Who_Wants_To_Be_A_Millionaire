@@ -1,7 +1,7 @@
 <template>
     
   <div id="grid-container">
-      <div>
+      <div id="features">
           <life-lines :currentAnswers="currentAnswers" :correctAnswerIndex="correctAnswerIndex" :phoneFriendMessage="phoneFriendMessage"/>
           <money-list :moneyList="moneyList" :potentialPrize="potentialPrize"/>
      </div>
@@ -9,21 +9,29 @@
       <section v-if="!lost">
       <div>
           <img v-if="displayingGraph" :src="require(`../../../client/public/images/${correctAnswerIndex}.png`)" alt="">
-          <h3>{{phoneFriendMessage}}</h3>
-          <h2 v-html="currentQuestion">{{currentQuestion}}</h2>              
+          <h3 v-html="phoneFriendMessage">{{phoneFriendMessage}} </h3>
+          <h2 v-html="currentQuestion" id="question">{{currentQuestion}}</h2>  
+                    
           <ol id="answer-container">
-              <li id="answer" v-for="(answer, index) in currentAnswers" :key="index" @click="checkAnswer(answer); answerSelected($event, answer)">
-                 <button v-html="answer.answer" :class="answer.selected ? 'selected' : 'not-selected'" :id="answer.right ? 'right' : 'wrong'" :disabled="answer.inactive">{{answer.answer}}</button>
+              <li class="answer" v-for="(answer, index) in currentAnswers" :key="index" 
+              @click="checkAnswer(answer); answerSelected($event, answer)" 
+              :class="answer.selected ? 'selected' : 'not-selected'" 
+              :id="answer.right ? 'right' : 'wrong'">
+                 <button v-html="answer.answer" 
+                 :class="answer.inactive ? 'inactive' : 'active'" :disabled="answer.inactive" >{{answer.answer}}</button>
              </li>
           </ol>
-          <button v-if="indexCounter>0" @click="takeMoney()">Take my Money!</button>
+          <button class="button" v-if="indexCounter>0" @click="takeMoney()">Take my Money!</button>
       </div>
       </section>
       <section v-else>
           <div>
-              <h2>{{name}}, you are a disappointment!!</h2>
-              <p>You leave with £{{currentPrize}}</p>
-            <button id="restart-game" @click="restartGame" >Redeem yourself, loser!</button>
+            <audio autoplay volume="0.2">
+            <source src="../../public/sounds/wrong_answer.mp3" />
+            </audio>  
+              <h2 id='lost-message'>{{name}}, you are a disappointment!!</h2>
+              <p id='prize-money'>You leave with £{{currentPrize}}</p>
+            <button class="button" id="restart-game" @click="restartGame" >Redeem yourself, loser!</button>
           </div>
       </section>
   </div>
@@ -121,6 +129,7 @@ export default {
                 this.potentialPrize = this.moneyList[this.indexCounter]
                 this.phoneFriendMessage = ""
                 this.displayingGraph = false
+                
             }
 
             else if (answer.correct && this.indexCounter === 14){
@@ -167,7 +176,8 @@ text-align: left;
 }
 
 .selected {
-    background-color: orange
+    background-color: orange;
+    color: darkblue;
 }
 
 #right {
@@ -177,20 +187,75 @@ text-align: left;
 #answer-container{
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr
+    grid-template-rows: 1fr 1fr;
+    margin-right: auto;
+    margin-left: auto;
+    margin-bottom: 80px;
 }
 
-#answer {
-    border: white 2px double;
+.answer {
+    border: white 4px double;
     border-radius: 20px;
+    width: 80%;
+    font-size: 25px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 20px;
+    margin-bottom: 20px,;
+    margin-top: 20px;
+    color: orange;
+    font-weight: bold;
+    font-family: Copperplate;
 }
 
 button {
     background-color: transparent;
     color: white;
     border: none;
+    font-size: 18px;
+    font-family: Avenir;
+  
 }
 
+.button {
+    background-color: orange;
+    padding: 10px;
+    border-radius: 10px;
+    font-weight: bold;
+    color: darkblue;
+    font-family: Copperplate;
+    font-size: 25px;
+}
 
+button:focus {
+    outline: 0px;
+}
+
+#question {
+    border: white 4px double;
+    border-radius: 20px;
+    margin-top: 60px;
+    width: 80%;
+    margin-right: auto;
+    margin-left: auto;
+    padding: 5px;
+}
+
+#features {
+    margin-left: 30px;
+}
+
+.inactive {
+    color: transparent;
+}
+
+#lost-message {
+    margin-top: 60px
+}
+
+#prize-money {
+    font-size: 20px;
+    margin-bottom: 60px;
+}
 
 </style>
