@@ -3,23 +3,16 @@
   <div id="grid-container">
       <div>
           <life-lines :currentAnswers="currentAnswers" :correctAnswerIndex="correctAnswerIndex" :phoneFriendMessage="phoneFriendMessage"/>
-      <ul v-for="(money, index) in moneyList.slice().reverse()" :key="index" id="money-list">
-          <li v-if="potentialPrize === money" class="highlight">
-              £{{money}}
-              </li>
-             <li v-else class="normal"> <p>£{{money}}</p>
-          </li>
-      </ul>
-      </div>
+          <money-list :moneyList="moneyList" :potentialPrize="potentialPrize"/>
+     </div>
+          
       <section v-if="!lost">
       <div>
           <img v-if="displayingGraph" :src="require(`../../../client/public/images/${correctAnswerIndex}.png`)" alt="">
           <h3>{{phoneFriendMessage}}</h3>
-          <h2 v-html="currentQuestion">{{currentQuestion}}</h2>
-        
-              
-          <ol>
-              <li v-for="(answer, index) in currentAnswers" :key="index" @click="checkAnswer(answer); answerSelected($event, answer)">
+          <h2 v-html="currentQuestion">{{currentQuestion}}</h2>              
+          <ol id="answer-container">
+              <li id="answer" v-for="(answer, index) in currentAnswers" :key="index" @click="checkAnswer(answer); answerSelected($event, answer)">
                  <button v-html="answer.answer" :class="answer.selected ? 'selected' : 'not-selected'" :id="answer.right ? 'right' : 'wrong'" :disabled="answer.inactive">{{answer.answer}}</button>
              </li>
           </ol>
@@ -30,165 +23,142 @@
           <div>
               <h2>{{name}}, you are a disappointment!!</h2>
               <p>You leave with £{{currentPrize}}</p>
-            <button @click="restartGame" >Redeem yourself, loser!</button>
+            <button id="restart-game" @click="restartGame" >Redeem yourself, loser!</button>
           </div>
       </section>
-      
   </div>
 </template>
 
 <script>
 import LifeLines from '../components/LifeLines.vue'
+import MoneyList from '../components/MoneyList.vue'
 import {shuffle} from 'lodash';
 import { eventBus } from '@/main.js'
 
 export default {   
-name: 'gameplay',
-data() {
-    return {
-        currentQuestion: null,
-        currentAnswers: [],
-        moneyList: ["100", "200", "300", "500", "1,000", "2,000", "4,000", "8,000", "16,000", "32,000", "64,000", "125,000", "250,000", "500,000", "1 MILLION"],
-        indexCounter: 0,
-        currentPrize: 0,
-        potentialPrize: "100",
-        lost: false,
-        winner: false,
-        // moneyWithKeys: [],
-        currentAnswerCorrect: null,
-        phoneFriendMessage: "",
-        AddClassIfCorrect: false,
-        correctAnswerIndex: null,
-        displayingGraph: false
-       
-       
-    }
-},
-components: {
-    'life-lines': LifeLines
-   
-  },
-props: ["questions", "name"],
-
-mounted() {
-     this.getCurrentAnswers(this.indexCounter)
-     this.getCurrentQuestion(this.indexCounter)
-    //  this.addKeysToMoneyList()   
-
-    eventBus.$on('phoneAFriend', (payload) => {
-        this.phoneFriendMessage = payload + this.currentAnswerCorrect
-    }),
-
-    eventBus.$on('askAudience', (payload) => {
-        this.correctAnswerIndex = payload
-        this.displayingGraph = true
-    })
-    
-},
-
-methods: {
-
-    getCurrentQuestion: function(index) {
-        this.currentQuestion = this.questions[index].question
-        console.log(this.currentQuestion)
+    name: 'gameplay',
+    data() {
+        return {
+            currentQuestion: null,
+            currentAnswers: [],
+            moneyList: ["100", "200", "300", "500", "1,000", "2,000", "4,000", "8,000", "16,000", "32,000", "64,000", "125,000", "250,000", "500,000", "1 MILLION"],
+            indexCounter: 0,
+            currentPrize: 0,
+            potentialPrize: "100",
+            lost: false,
+            winner: false,
+            currentAnswerCorrect: null,
+            phoneFriendMessage: "",
+            correctAnswerIndex: null,
+            displayingGraph: false 
+        }
     },
 
-    getCurrentAnswers: function(index) {
-        let answers = []
-        const answersWrong = this.questions[index].incorrect_answers // [answer, answer, ...]
-        answersWrong.forEach( incorrectAnswer => {
-                const fullAnswer = {answer: incorrectAnswer, correct: false, selected: false, inactive: false} // in here add selected key?
-                answers.push(fullAnswer)       
+    components: {
+        'life-lines': LifeLines,
+        'money-list': MoneyList
+    },
+
+    props: ["questions", "name"],
+
+    mounted() {
+        this.getCurrentAnswers(this.indexCounter)
+        this.getCurrentQuestion(this.indexCounter)  
+
+        eventBus.$on('get5050', () => {
+            this.get5050()
+            }) ,
+
+        eventBus.$on('phoneAFriend', (payload) => {
+            this.phoneFriendMessage = payload + this.currentAnswerCorrect
+        }),
+
+        eventBus.$on('askAudience', (payload) => {
+            this.correctAnswerIndex = payload
+            this.displayingGraph = true
         })
-        const answerCorrect = this.questions[index].correct_answer
-        this.currentAnswerCorrect = answerCorrect
-        answers.push({answer: answerCorrect, correct: true, right: false, selected: false, inactive: false})
-
-        let shuffledArray = shuffle(answers)
-        this.currentAnswers = shuffledArray
-    },
-
-    // handleClick function - on click select answer (change select to true) then do check answer function which has the timeout and does the green to the right answer
-    answerSelected: function(event, answer) {
-        answer.selected = true
-        setTimeout(() => {
-        for (const answer of this.currentAnswers) {
-            if (answer.correct === true) {
-                answer.right = true
-            }
-        }
-        }, 1000)
-    },
-    
-    checkAnswer: function(answer) {
-        setTimeout(() => {
-        if (answer.correct && this.indexCounter < 14) {
-            this.indexCounter ++;
-            this.getCurrentQuestion(this.indexCounter)
-            this.getCurrentAnswers(this.indexCounter)
-            this.currentPrize = this.moneyList[this.indexCounter - 1]
-            this.potentialPrize = this.moneyList[this.indexCounter]
-            this.phoneFriendMessage = ""
-            this.displayingGraph = false
-        }
-        else if (answer.correct && this.indexCounter === 14){
-            eventBus.$emit('winner')
-        }
-        else {
-            this.lost = true;
-            if (this.indexCounter < 4) {
-                this.currentPrize = 0
-            }
-            else if (this.indexCounter < 9){
-                this.currentPrize = "1,000"
-            }
-            else if (this.indexCounter < 14){
-                this.currentPrize = "32,000"
-            }  
-        }      
-          } 
-        , 2000)
-    },
-
-        // addKeysToMoneyList: function() {
-        //     this.moneyList.forEach((money) => {
-        //         const prizeWithKeys = {quantity: money, basePrize: false}
-        //         this.moneyWithKeys.push(prizeWithKeys)
-        //     })
-        //     this.moneyWithKeys.forEach((money) => {
-        //         if (money.quantity === "1,000" || money.quantity === "32,000" || money.quantity === "1 MILLION") {
-        //             money.basePrize = true
-        //         }
-        //     })
-        // },
         
+    },
+
+    methods: {
+        getCurrentQuestion: function(index) {
+            this.currentQuestion = this.questions[index].question
+            console.log(this.currentQuestion)
+        },
+
+        getCurrentAnswers: function(index) {
+            let answers = []
+            const answersWrong = this.questions[index].incorrect_answers
+            answers = answersWrong.map( incorrectAnswer => {
+                    return {answer: incorrectAnswer, correct: false, selected: false, inactive: false}     
+            })
+            const answerCorrect =this.questions[index].correct_answer
+            this.currentAnswerCorrect = answerCorrect
+            answers.push({answer: answerCorrect, correct: true, right: false, selected: false, inactive: false})
+
+            this.currentAnswers = shuffle(answers)
+        },
+
+        // handleClick function - on click select answer (change select to true) then do check answer function which has the timeout and does the green to the right answer
+        answerSelected: function(event, answer) {
+            answer.selected = true
+            setTimeout(() => {
+            for (const answer of this.currentAnswers) {
+                if (answer.correct === true) {
+                    answer.right = true
+                }
+              }
+            }, 1000)
+        },
+        
+        checkAnswer: function(answer) {
+            setTimeout(() => {
+            if (answer.correct && this.indexCounter < 14) {
+                this.indexCounter ++;
+                this.getCurrentQuestion(this.indexCounter)
+                this.getCurrentAnswers(this.indexCounter)
+                this.currentPrize = this.moneyList[this.indexCounter - 1]
+                this.potentialPrize = this.moneyList[this.indexCounter]
+                this.phoneFriendMessage = ""
+                this.displayingGraph = false
+            }
+
+            else if (answer.correct && this.indexCounter === 14){
+                eventBus.$emit('winner')
+            }
+
+            else {
+                this.lost = true;
+                if (this.indexCounter < 4) {
+                    this.currentPrize = 0
+                }
+                else if (this.indexCounter < 9){
+                    this.currentPrize = "1,000"
+                }
+                else if (this.indexCounter <= 14){
+                    this.currentPrize = "32,000"
+                }  
+              }      
+            } 
+            , 2000)
+        },
+
         restartGame: async function() {
-        eventBus.$emit('go-home')
-        // eventBus.$emit('restart-gameplay')
-        // await this.getCurrentQuestion(this.indexCounter)
-        // await this.getCurrentAnswers(this.indexCounter)
-        // this.lost = false
-        // this.indexCounter = 0
-        // this.currentPrize = 0
-    },
+            eventBus.$emit('go-home')
+        },
 
-    takeMoney: function(){
-        eventBus.$emit('take-money', this.currentPrize);
-        
-    },
-
-   
-
-    },
-    
-    
-}
-
+        takeMoney: function(){
+            eventBus.$emit('take-money', this.currentPrize);  
+        }
+      }
+    }
 </script>
 
 <style scoped>
 ol {
 list-style-type: upper-alpha;
+list-style-position: inside;
+text-align: left;
 }
 
 #grid-container {
@@ -196,25 +166,31 @@ list-style-type: upper-alpha;
     grid-template-columns: 1fr 3fr;
 }
 
-.highlight {
-    background-color: orange;
-}
-
-/* #button {
-    background-color: none;
-    transition: ease-in-out, background-color 1s ease-in-out;
-}
-#button:focus{
-    background-color: orange;  
-} */
-
 .selected {
     background-color: orange
 }
 
 #right {
     background-color: greenyellow;
-    /* padding: 20px; */
 }
+
+#answer-container{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr
+}
+
+#answer {
+    border: white 2px double;
+    border-radius: 20px;
+}
+
+button {
+    background-color: transparent;
+    color: white;
+    border: none;
+}
+
+
 
 </style>
