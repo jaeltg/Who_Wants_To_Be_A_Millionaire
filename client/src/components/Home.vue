@@ -12,8 +12,8 @@
         <br>
         <input type="submit" value="Start Game" id="submit">
     </form>
-    <h3>TOP SCORES</h3>
-    <ul>
+    <h3 id="top-scores">TOP SCORES</h3>
+    <ul id="scores-list">
         <li v-for="(score, index) in scoresList" :key="index">{{score.name}} won £{{score.score}}</li>
     </ul>
   </div>
@@ -35,7 +35,7 @@ export default {
     mounted(){
         MillionerService.getScores()
         .then((scores) =>  scores.sort((a,b) => parseInt(b.score) - parseInt(a.score)))        
-        .then((sortedScores) => (this.scoresList = sortedScores))
+        .then((sortedScores) => (this.scoresList = sortedScores.slice(0, 5)))
     },
     methods: {
         handleClick: function() {
@@ -78,5 +78,17 @@ label {
     font-family: Copperplate;
     margin-top: 80px;
     border-radius: 10px;
+}
+#top-scores {
+    font-size: 30px;
+     font-family: Copperplate;
+     margin-top: 80px;
+}
+#scores-list{
+    list-style: none;
+    padding: 0;
+}
+#scores-list > li {
+    font-size: 20px;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div>
-      <h2>{{name}}, you took your money! You leave with £{{ takeawayPrize }}</h2>
-      <button @click="goHome()">Start Again</button>
+      <h2>{{name}}, you chickened out! You leave with £{{ takeawayPrize }}</h2>
+      <button @click="goHome()">Stop Yolking Around!</button>
   </div>
 </template>
 
@@ -15,8 +15,7 @@ export default {
         goHome: function() {
             eventBus.$emit('go-home')
     }
-
-}
+  }
 }
 </script>
 

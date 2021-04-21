@@ -1,10 +1,8 @@
 <template>
   <div>
        <ol reversed id="money-list">
-          <li v-for="(money, index) in moneyList.slice().reverse()" :key="index" v-if="potentialPrize === money" class="highlight">
-              <p>£{{money}}</p>
-              </li>
-             <li v-else class="normal"> <p class="money">£{{money}}</p>
+          <li v-for="(money, index) in moneyList.slice().reverse()" :key="index" :class="potentialPrize === money ? 'highlight' : 'normal'">
+              <p class="money">£{{money}}</p>
           </li>
       </ol>
       
