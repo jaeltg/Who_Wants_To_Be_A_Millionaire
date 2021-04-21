@@ -42,7 +42,7 @@ export default {
         return {
             currentQuestion: null,
             currentAnswers: [],
-            moneyList: [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000, 64000, 125000, 250000, 500000, 1000000],
+            moneyList: ["100", "200", "300", "500", "1,000", "2,000", "4,000", "8,000", "16,000", "32,000", "64,000", "125,000", "250,000", "500,000", "1,000,000"],
             indexCounter: 0,
             currentPrize: 0,
             potentialPrize: "100",
@@ -175,7 +175,7 @@ export default {
         takeMoney: function(){
             const score = {
                 name: this.name,
-                score: this.currentPrize
+                score: this.currentPrize.replace(",","")
             }
             MillionerService.addScore(score)
             .then(eventBus.$emit('take-money', this.currentPrize));  

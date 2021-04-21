@@ -24,12 +24,13 @@ export default {
     data() {
         return {
             name: "",
-            scoresList: []
+            scoresList: [],
+            formattedScores: []
         }
     },
     mounted(){
         MillionerService.getScores()
-        .then((scores) =>  scores.sort((a,b) => parseFloat(b.score) - parseFloat(a.score)))        
+        .then((scores) =>  scores.sort((a,b) => parseInt(b.score) - parseInt(a.score)))        
         .then((sortedScores) => (this.scoresList = sortedScores))
     },
     methods: {
@@ -37,6 +38,9 @@ export default {
             eventBus.$emit('start-gameplay');
             eventBus.$emit('reset-gameplay', "true");
             eventBus.$emit('name', this.name)
+        },
+        formatScores: function() {
+
         }
     }
 }
