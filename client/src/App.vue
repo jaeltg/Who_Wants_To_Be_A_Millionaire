@@ -15,7 +15,6 @@ import Home from './components/Home.vue'
 import TakeMoney from './components/TakeMoney.vue'
 import Win from './components/Win.vue'
 import Prize from './components/Prize.vue'
-import MillionerService from "@/services/MillionerService"
 import { eventBus } from '@/main.js'
 
 export default {
