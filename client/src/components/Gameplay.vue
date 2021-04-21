@@ -9,8 +9,9 @@
       <section v-if="!lost">
       <div>
           <img v-if="displayingGraph" :src="require(`../../../client/public/images/${correctAnswerIndex}.png`)" alt="">
-          <h3 v-html="phoneFriendMessage">{{phoneFriendMessage}}</h3>
-          <h2 v-html="currentQuestion" id="question">{{currentQuestion}}</h2>              
+          <h3 v-html="phoneFriendMessage">{{phoneFriendMessage}} </h3>
+          <h2 v-html="currentQuestion" id="question">{{currentQuestion}}</h2>  
+                    
           <ol id="answer-container">
               <li class="answer" v-for="(answer, index) in currentAnswers" :key="index" 
               @click="checkAnswer(answer); answerSelected($event, answer)" 
@@ -25,8 +26,11 @@
       </section>
       <section v-else>
           <div>
-              <h2>{{name}}, you are a disappointment!!</h2>
-              <p>You leave with £{{currentPrize}}</p>
+            <audio autoplay volume="0.2">
+            <source src="../../public/sounds/wrong_answer.mp3" />
+            </audio>  
+              <h2 id='lost-message'>{{name}}, you are a disappointment!!</h2>
+              <p id='prize-money'>You leave with £{{currentPrize}}</p>
             <button class="button" id="restart-game" @click="restartGame" >Redeem yourself, loser!</button>
           </div>
       </section>
@@ -125,6 +129,7 @@ export default {
                 this.potentialPrize = this.moneyList[this.indexCounter]
                 this.phoneFriendMessage = ""
                 this.displayingGraph = false
+                
             }
 
             else if (answer.correct && this.indexCounter === 14){
@@ -171,7 +176,8 @@ text-align: left;
 }
 
 .selected {
-    background-color: orange
+    background-color: orange;
+    color: darkblue;
 }
 
 #right {
@@ -241,6 +247,15 @@ button:focus {
 
 .inactive {
     color: transparent;
+}
+
+#lost-message {
+    margin-top: 60px
+}
+
+#prize-money {
+    font-size: 20px;
+    margin-bottom: 60px;
 }
 
 </style>

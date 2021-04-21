@@ -35,9 +35,11 @@ export default {
         },
         
          get5050: function() {
+            const removedAnswers = []
             for (var i = 0; i<3; i++) {
-                if (this.currentAnswers[i].correct === false){
+                if (this.currentAnswers[i].correct === false && removedAnswers.length < 2){
                     this.currentAnswers[i].inactive = true
+                    removedAnswers.push(this.currentAnswers[i])
                 }
                 this.fiftyFiftyActive = false
                 // eventBus.$emit('get5050');

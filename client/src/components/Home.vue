@@ -1,9 +1,10 @@
 <template>
 <div id="home-component">
     <h2>Welcome!</h2>
-    <audio controls volume= "0.5" autoplay>
+    <!-- <audio autoplay volume="0.5">
   <source src="../../public/sounds/main_theme.mp3" />
-</audio>
+</audio> -->
+
     <form @submit.prevent="handleClick">
         <label for="name">Please enter your name</label> 
         <br>     
@@ -44,7 +45,8 @@ label {
     margin-bottom: 20px;
 }
 #name {
-      
+    border-radius: 10px;
+    border: white 5px solid;
     margin-top: 15px;
     font-family: Avenir;
 }
@@ -60,5 +62,6 @@ label {
     font-size: 30px;
     font-family: Copperplate;
     margin-top: 80px;
+    border-radius: 10px;
 }
 </style>

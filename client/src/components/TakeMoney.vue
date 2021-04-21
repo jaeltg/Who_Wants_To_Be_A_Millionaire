@@ -21,6 +21,9 @@ export default {
 </script>
 
 <style scoped>
+h2{
+    margin-top: 40px;
+}
 button {
     background-color: orange;
     padding: 10px;
