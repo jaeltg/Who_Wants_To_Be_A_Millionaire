@@ -1,7 +1,11 @@
 <template>
   <div>
       <img v-if="zsolt===false" :src="require(`../../../client/public/images/ludo.png`)" alt="">
-      <h1 v-if="zsolt===true">I DON'T THINK SO!!!</h1>
+      <h1 v-if="zsolt===true">I DON'T THINK SO!!!
+        <audio autoplay volume="0.5">
+        <source src="../../public/sounds/sad_trombone.mp3" />
+      </audio>
+      </h1>
       <img v-if="zsolt===true" :src="require(`../../../client/public/images/zsoltfinger.gif`)" alt="">
       <button v-if="zsolt===false" @click="playLudo">Place a nice game of Ludo</button>
       <button v-if="zsolt===true" @click="goHome">TRY AGAIN</button>
