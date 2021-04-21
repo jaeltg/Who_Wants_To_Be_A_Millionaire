@@ -1,9 +1,9 @@
 <template>
 <div id="home-component">
     <h2>Welcome!</h2>
-    <!-- <audio autoplay volume="0.5">
+    <audio autoplay volume="0.5">
   <source src="../../public/sounds/main_theme.mp3" />
-</audio> -->
+</audio>
 
     <form @submit.prevent="handleClick">
         <label for="name">Please enter your name</label> 

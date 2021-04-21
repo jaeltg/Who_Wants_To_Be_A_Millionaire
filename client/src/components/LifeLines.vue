@@ -29,7 +29,7 @@ export default {
     },
     methods: {
         phoneAFriend: function() {
-            const message = "Zsolt is not sure ... but thinks it could be ... "
+            const message = "Chris is not sure ... but thinks it could be ... "
             eventBus.$emit("phoneAFriend", message)
             this.phoneAFriendActive = false
         },
