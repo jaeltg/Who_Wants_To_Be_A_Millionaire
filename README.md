@@ -2,6 +2,8 @@
 
 A browser game mimicking the famous Game Show of the same name. The more answers you get correct the bigger the prize! If you get the answer wrong you could leave with nothing.
 
+You can play Who Wants To Be A Millionaire here! https://millionaires-c4191.web.app/
+
 ## Made Using:
 
 **Languages:** JavaScript, HTML5, CSS
